@@ -3,7 +3,7 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><small>Menu</small></mat-toolbar>
+    <mat-toolbar><small>ScoreCraft</small></mat-toolbar>
     <cdk-accordion>
       <mat-nav-list style="overflow-x: hidden;">
         @for (item of menuItems; track item.label) {
