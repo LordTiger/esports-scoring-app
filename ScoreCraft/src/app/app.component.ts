@@ -16,22 +16,22 @@ export class AppComponent {
   menuItems: Array<IMenuItemModel> = [
     {
       label: 'Home',
-      href: '/',
+      href: 'home',
       iconName: 'home'
     },
     {
       label: 'Users',
-      href: '/Users',
+      href: 'users',
       iconName: 'person'
     },
     {
       label: 'Teams',
-      href: '/Teams',
+      href: 'teams',
       iconName: 'group'
     },
     {
       label: 'Matches',
-      href: '/contact',
+      href: 'matches',
       iconName: 'sports_soccer'
     }
   ];
