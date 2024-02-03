@@ -1,0 +1,81 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><small>Menu</small></mat-toolbar>
+    <cdk-accordion>
+      <mat-nav-list style="overflow-x: hidden;">
+        @for (item of menuItems; track item.label) {
+          @if (item?.children == undefined || item?.children?.length == 0) {
+            <ng-container>
+                <div routerLinkActive="active-menu-item" [routerLinkActiveOptions]="{ exact: (item.additionalRoute)? false: true }">
+                    <mat-list-item [routerLink]="item.href" >
+                        <span matListItemIcon>
+                            <mat-icon>{{item.iconName}}</mat-icon>
+                        </span>
+                        <span matListItemTitle>{{item.label}}</span>
+                    </mat-list-item>
+
+                    @if(item.additionalRoute) {
+                        <mat-list-item [routerLink]="item.additionalRoute" style="display:none">
+                            <span matListItemIcon>
+                                <mat-icon>{{item.iconName}}</mat-icon>
+                            </span>
+                            <span matListItemTitle>{{item.label}}</span>
+                        </mat-list-item>
+                    }
+                </div>
+            </ng-container>
+              
+          } @else {
+            <ng-container>
+              <cdk-accordion-item #accordionItem="cdkAccordionItem">
+                  <mat-list-item (click)="accordionItem.toggle()">
+                      <span matListItemIcon>
+                          <mat-icon>{{item.iconName}}</mat-icon>
+                      </span>
+                      <span matListItemTitle>{{item.label}}</span>
+                      <span matListItemMeta>
+                          <mat-icon>{{(accordionItem.expanded)? 'expand_less': 'expand_more'}}</mat-icon>
+                      </span>
+                  </mat-list-item>
+
+                  <mat-nav-list [style.display]="accordionItem.expanded ? '' : 'none'">
+                      @for (child of item?.children; track child.label) {
+                          <mat-list-item [routerLink]="child.href" routerLinkActive="active-menu-item" [routerLinkActiveOptions]="{ exact: true }">
+                              <span matListItemIcon>
+                                  <mat-icon>{{child.iconName}}</mat-icon>
+                              </span>
+                              <span matListItemTitle>{{child.label}}</span>
+                          </mat-list-item>
+                      }
+                      <mat-divider></mat-divider>
+                  </mat-nav-list>
+              </cdk-accordion-item>
+            </ng-container>
+          }
+      }
+
+      </mat-nav-list>
+    </cdk-accordion>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      @if (isHandset$ | async) {
+        <button
+          type="button"
+          aria-label="Toggle sidenav"
+          mat-icon-button
+          (click)="drawer.toggle()">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+      }
+      <!-- <span>ScoreCraft</span> -->
+      
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+    <!-- Add Content Here -->
+  </mat-sidenav-content>
+</mat-sidenav-container>
