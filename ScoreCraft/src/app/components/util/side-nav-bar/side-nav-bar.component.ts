@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IMenuItemModel } from '../../interfaces/i-menu-item-model';
+import { IMenuItemModel } from '../../../interfaces/i-menu-item-model';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 
 @Component({

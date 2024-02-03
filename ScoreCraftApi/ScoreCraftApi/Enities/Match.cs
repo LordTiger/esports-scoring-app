@@ -15,17 +15,17 @@ namespace ScoreCraftApi.Enities
         public int? RefMatchWinner { get; set; }
         public string? Formate { get; set; } // 1v1, 2v2, etc.
         public int BestOf { get; set; } // 3, 5, etc.
-        public ICollection<MatchResult> MatchResults { get; set; }
+        public ICollection<MatchResult>? MatchResults { get; set; }
 
 
         [ForeignKey("RefHomeTeam")]
-        public virtual Team HomeTeam { get; set; }
+        public virtual Team? HomeTeam { get; set; }
 
         [ForeignKey("RefGuestTeam")]
-        public virtual Team GuestTeam { get; set; }
+        public virtual Team? GuestTeam { get; set; }
 
         [ForeignKey("RefMatchWinner")]
-        public virtual Team WinningTeam { get; set; }
+        public virtual Team? WinningTeam { get; set; }
     }
 
     public class MatchesBLL

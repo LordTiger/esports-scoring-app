@@ -1,7 +1,25 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using ScoreCraftApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins(
+            "http://localhost:4200", // Angular Serve Local
+            "https://localhost:4200",
+            "https://localhost:7152"
+        );
+
+        builder.AllowAnyMethod();
+        builder.AllowAnyHeader();
+        builder.AllowCredentials();
+        builder.WithExposedHeaders(HeaderNames.ContentDisposition);
+    });
+});
 
 // Add services to the container.
 
@@ -23,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 

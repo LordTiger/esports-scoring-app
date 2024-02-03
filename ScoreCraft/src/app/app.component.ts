@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { SideNavBarComponent } from './components/side-nav-bar/side-nav-bar.component';
+import { SideNavBarComponent } from './components/util/side-nav-bar/side-nav-bar.component';
 import { IMenuItemModel } from './interfaces/i-menu-item-model';
 
 @Component({

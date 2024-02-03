@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { SideNavBarComponent } from './components/side-nav-bar/side-nav-bar.component';
+import { SideNavBarComponent } from './components/util/side-nav-bar/side-nav-bar.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },

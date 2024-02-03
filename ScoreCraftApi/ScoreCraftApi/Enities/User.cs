@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using ScoreCraftApi.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,16 +13,16 @@ namespace ScoreCraftApi.Enities
         public Guid RefUser { get; set; }
 
         public int? RefTeam { get; set; }
-        public bool isTeamCaptain { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
+        public bool IsTeamCaptain { get; set; }
+        public string? Name { get; set; }
+        public string? Surname { get; set; }
+        public string? Email { get; set; }
 
         [ForeignKey("RefTeam")]
-        public virtual Team Team { get; set; }
+        public virtual Team? Team { get; set; }
 
         // Navigation Properties
-        public ICollection<Match> Matches { get; set; }
+        public ICollection<Match>? Matches { get; set; }
     }
 
     public class UsersBLL {
@@ -32,14 +33,14 @@ namespace ScoreCraftApi.Enities
             _context = context;
         }
 
-       public async Task<List<User>> GetUserCollection() // Return list of Users
+       public async Task<List<User>> GetUserCollection() 
        {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.AsNoTracking().ToListAsync();
        }
 
-        public async Task<User> GetUser(Guid RefUser) // Return User by RefUser
+        public async Task<User> GetUser(Guid RefUser) 
         {
-            var user = await _context.Users.FindAsync(RefUser);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(w => w.RefUser == RefUser);
 
             if(user is null) return null;
           
@@ -47,7 +48,7 @@ namespace ScoreCraftApi.Enities
             return user;
         }
 
-        public async Task<User> Insert(User model) // Return User by RefUser
+        public async Task<User> Insert(User model) 
         {
             _context.Users.Add(model);
             await _context.SaveChangesAsync();
@@ -55,33 +56,29 @@ namespace ScoreCraftApi.Enities
             return await GetUser(model.RefUser);
         }
 
-        public async Task<User> Update(User model) // Return User by RefUser
+        public async Task<User> Update(User model) 
         {
-            var dbUser = await _context.Users.FindAsync(model.RefUser);
 
-            if(dbUser is null) return null;
-
-
-
-
-            dbUser.RefTeam = model.RefTeam;
-            dbUser.Name = model.Name;
-            dbUser.Surname = model.Surname;
-            dbUser.Email = model.Email;
-            await _context.SaveChangesAsync();
+            await _context.Users.Where(u => u.RefUser == model.RefUser).ExecuteUpdateAsync(n =>
+                n.SetProperty(u => u.Name, model.Name)
+                .SetProperty(u => u.Surname, model.Surname)
+                .SetProperty(u => u.Email, model.Email)
+                .SetProperty(u => u.RefTeam, model.RefTeam)
+                .SetProperty(u => u.IsTeamCaptain, model.IsTeamCaptain));
 
             return await GetUser(model.RefUser);
         }
 
-        public async Task<bool?> Delete(Guid RefUser) // Return User by RefUser
+        public async Task<bool?> Delete(Guid RefUser) 
         {
-            var dbUser = await _context.Users.FindAsync(RefUser);
+            //var dbUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(w => w.RefUser == RefUser);
 
-            if (dbUser is null) return null;
+            //if (dbUser is null) return null;
 
+            //_context.Users.Remove(dbUser);
+            //await _context.SaveChangesAsync();
 
-            _context.Users.Remove(dbUser);
-            await _context.SaveChangesAsync();
+           await _context.Users.Where(u => u.RefUser == RefUser).ExecuteDeleteAsync();
 
             return true;
         }

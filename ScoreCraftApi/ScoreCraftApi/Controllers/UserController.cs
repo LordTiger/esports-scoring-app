@@ -16,7 +16,7 @@ namespace ScoreCraftApi.Controllers
             _context = context;
         }
 
-        [HttpGet("GetUserCollection")]
+        [HttpGet("GetCollection")]
         public async Task<ActionResult<List<User>>> GetUserCollection() 
         {
             return Ok(await new UsersBLL(_context).GetUserCollection());
@@ -44,22 +44,22 @@ namespace ScoreCraftApi.Controllers
         [HttpPut("Update")]
         public async Task<ActionResult<User>> Update(User model)
         {
-            var newUser = await new UsersBLL(_context).Update(model);
+            var updatedUser = await new UsersBLL(_context).Update(model);
 
-            if (newUser is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
+            if (updatedUser is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
-            return Ok(newUser);
+            return Ok(updatedUser);
         }
 
 
         [HttpDelete("Delete")]
-        public async Task<ActionResult<bool>> Delete(Guid RefMember)
+        public async Task<ActionResult<bool>> Delete(Guid RefUser)
         {
-            var isUserDeleted = await new UsersBLL(_context).Delete(RefMember);
+            var isUserDeleted = await new UsersBLL(_context).Delete(RefUser);
 
             if (isUserDeleted is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
-            return Ok(RefMember);
+            return Ok(isUserDeleted);
         }
 
     }

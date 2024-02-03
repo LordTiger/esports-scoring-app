@@ -1,1 +1,53 @@
-<p>teams works!</p>
+<ribbon #ribbon="ribbon">
+    <mat-toolbar class="mat-elevation-z2">
+        <mat-toolbar-row>
+            <span>Teams</span>
+            <span class="spacer"></span>
+            <button mat-icon-button  matTooltip="Add New Team">
+                <mat-icon >group_add</mat-icon>
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</ribbon>
+
+
+<table mat-table [dataSource]="teams" >
+ 
+    <ng-container matColumnDef="teamName">
+        <th mat-header-cell *matHeaderCellDef> Team Name </th>
+        <td mat-cell *matCellDef="let item"> {{item.teamName}} </td>
+    </ng-container>
+    
+
+    <ng-container matColumnDef="ratio">
+        <th mat-header-cell *matHeaderCellDef> Win Rate Ration </th>
+        <td mat-cell *matCellDef="let item"> 0% </td>
+    </ng-container>
+    
+   
+    <ng-container matColumnDef="totalMatches">
+        <th mat-header-cell *matHeaderCellDef> Total Matches </th>
+        <td mat-cell *matCellDef="let item"> {{item.matches.length ?? 0}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let item"> 
+            <button mat-icon-button  matTooltip="View Details">
+                <mat-icon >visibility</mat-icon>
+            </button>
+            <button mat-icon-button  matTooltip="Edit Team">
+                <mat-icon >edit</mat-icon>
+            </button>
+            <button mat-icon-button  matTooltip="Delete Team">
+                <mat-icon color="warn" >delete</mat-icon>
+            </button>
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+
+

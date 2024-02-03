@@ -16,25 +16,25 @@ namespace ScoreCraftApi.Controllers
             _context = context;
         }
 
-        [HttpGet("GetTeamsCollection")]
-        public async Task<ActionResult<List<Team>>> GetTeamsCollection()
+        [HttpGet("GetCollection")]
+        public ActionResult<List<Team>> GetTeamsCollection()
         {
-            return Ok(await new TeamBLL(_context).GetTeamsCollection());
+            return Ok( new TeamBLL(_context).GetTeamsCollection().Result);
         }
 
         [HttpGet("GetTeam")]
-        public async Task<ActionResult<Team>> GetTeam(int RefTeam)
+        public ActionResult<Team> GetTeam(int RefTeam)
         {
-            var team = await new TeamBLL(_context).GetTeam(RefTeam);
+            var team = new TeamBLL(_context).GetTeam(RefTeam).Result;
 
             if (team is null) return NotFound("Team not found");
             return Ok(team);
         }
 
         [HttpPost("Insert")]
-        public async Task<ActionResult<Team>> Insert(Team model)
+        public  ActionResult<Team> Insert(Team model)
         {
-            var newTeam = await new TeamBLL(_context).InsertTeam(model);
+            var newTeam = new TeamBLL(_context).InsertTeam(model).Result;
 
             if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -42,9 +42,9 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpPut("Update")]
-        public async Task<ActionResult<Team>> Update(Team model)
+        public ActionResult<Team> Update(Team model)
         {
-            var newTeam = await new TeamBLL(_context).UpdateTeam(model);
+            var newTeam = new TeamBLL(_context).UpdateTeam(model).Result;
 
             if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -52,9 +52,9 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpDelete("Delete")]
-        public async Task<ActionResult<bool>> Delete(int RefTeam)
+        public ActionResult<bool> Delete(int RefTeam)
         {
-            var isTeamDeleted = await new TeamBLL(_context).DeleteTeam(RefTeam);
+            var isTeamDeleted = new TeamBLL(_context).DeleteTeam(RefTeam).Result;
 
             if (isTeamDeleted is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 

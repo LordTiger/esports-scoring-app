@@ -1,0 +1,11 @@
+<cdk-accordion>
+  <cdk-accordion-item #accordionItem="cdkAccordionItem">
+      <div class="ribbon">
+          <ng-content></ng-content>
+      </div>
+      <div class="ribbon-content" [style.display]="accordionItem.expanded ? '' : 'none'">
+          <ng-content select="[ribbon-content]"></ng-content>
+      </div>
+      <div class="ribbon-backdrop" (click)="toggle()" [style.display]="accordionItem.expanded ? '' : 'none'"></div>
+  </cdk-accordion-item>
+</cdk-accordion>

@@ -13,7 +13,7 @@ namespace ScoreCraftApi.Enities
         public int? RefMatch { get; set; }
 
         [ForeignKey("RefMatch")]
-        public virtual Match Match { get; set; }
+        public virtual Match? Match { get; set; }
 
         public int? HomeResult { get; set; }
         public int? GuestResult { get; set; }
@@ -34,9 +34,9 @@ namespace ScoreCraftApi.Enities
             return matchResults;
         }
 
-        public async Task<MatchResult> GetMatchResult(int? RefMatchResult)
+        public async Task<MatchResult> GetMatchResult(int? RefMatch)
         {
-            var matchResult = await _context.MatchResults.FindAsync(RefMatchResult);
+            var matchResult = await _context.MatchResults.FindAsync(RefMatch);
 
             if (matchResult is null) return null;
 

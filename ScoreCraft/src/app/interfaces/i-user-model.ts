@@ -9,5 +9,5 @@ export interface IUserModel {
     surname?: string;
     email?: string;
     team?: ITeamModel;
-    matches: Array<IMatchModel>;
+    matches?: Array<IMatchModel>;
 }
