@@ -10,11 +10,18 @@ namespace ScoreCraftApi.Enities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid RefUser { get; set; }
+
         public int? RefTeam { get; set; }
-        public required string Name { get; set; } 
-        public required string Surname { get; set;}
-        public required string Email { get; set; }
-    
+        public bool isTeamCaptain { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+
+        [ForeignKey("RefTeam")]
+        public virtual Team Team { get; set; }
+
+        // Navigation Properties
+        public ICollection<Match> Matches { get; set; }
     }
 
     public class UsersBLL {

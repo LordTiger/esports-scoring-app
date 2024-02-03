@@ -53,7 +53,7 @@ namespace ScoreCraftApi.Controllers
 
 
         [HttpDelete("Delete")]
-        public async Task<ActionResult<User>> Delete(Guid RefMember)
+        public async Task<ActionResult<bool>> Delete(Guid RefMember)
         {
             var isUserDeleted = await new UsersBLL(_context).Delete(RefMember);
 

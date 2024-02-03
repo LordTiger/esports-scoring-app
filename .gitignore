@@ -1,11 +1,8 @@
-ScoreCraftApi/.vs/ScoreCraftApi/FileContentIndex/72f698aa-ff44-417a-b3dd-ddd4e9492283.vsidx
-ScoreCraftApi/.vs/ScoreCraftApi/FileContentIndex/723ed4d2-b3cd-43de-9cd5-f098e4f45ab3.vsidx
-ScoreCraftApi/.vs/ScoreCraftApi/FileContentIndex/443384d3-d28c-44d3-b934-15f20be4bbf6.vsidx
-ScoreCraftApi/.vs/ScoreCraftApi/FileContentIndex/b53e3016-f31d-4003-949f-e08d873ef66e.vsidx
-ScoreCraftApi/.vs/ScoreCraftApi/FileContentIndex/ec1cbdb8-606b-46d5-87b6-1e2a5a2e505d.vsidx
 ScoreCraftApi/.vs/ScoreCraftApi/DesignTimeBuild/.dtbcache.v2
 ScoreCraftApi/.vs/ScoreCraftApi/v16/.suo
 
 ScoreCraftApi/ScoreCraftApi/bin/Debug/*
+ScoreCraftApi/ScoreCraftApi/bin/Release/*
 ScoreCraftApi/ScoreCraftApi/obj/*
+ScoreCraftApi/.vs/ScoreCraftApi/*
 ScoreCraftApi/.vs/ScoreCraftApi/v17/.suo
