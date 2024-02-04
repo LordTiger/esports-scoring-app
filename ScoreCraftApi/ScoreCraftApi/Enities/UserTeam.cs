@@ -5,6 +5,8 @@
         public Guid RefUser { get; set; }
         public int RefTeam { get; set; }
 
+        public virtual List<int>? RefTeams { get; set; }
+
         public User? User { get; set; }
         public Team? Team { get; set; }
     }

@@ -8,6 +8,7 @@ export interface IUserModel {
     name?: string;
     surname?: string;
     email?: string;
+    userAssignedTeams?: string;
     matches?: Array<IMatchModel>;
     userTeams?: Array<IUserTeamModel>;
 }

@@ -44,7 +44,7 @@ namespace ScoreCraftApi.Controllers
         [HttpPost("AddUserToTeam")]
         public async Task<ActionResult<User>> AddUserToTeam(UserTeam model)
         {
-            var newTeam = await new TeamBLL(_context).AddUserToTeam(model.RefUser, model.RefTeam);
+            var newTeam = await new TeamBLL(_context).AddUserToTeam(model);
 
             if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -69,6 +69,16 @@ namespace ScoreCraftApi.Controllers
             if (isTeamDeleted is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
             return Ok(isTeamDeleted);
+        }
+
+        [HttpDelete("RemoveUserFromTeam")]
+        public async Task<ActionResult<bool>> RemoveUserFromTeam(Guid RefUser, int RefTeam)
+        {
+            var isUserRemoved = await new TeamBLL(_context).RemoveUserFromTeam(RefUser, RefTeam);
+
+            if (isUserRemoved is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
+
+            return Ok(isUserRemoved);
         }
     }
 }

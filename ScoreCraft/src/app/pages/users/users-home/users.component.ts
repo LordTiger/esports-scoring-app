@@ -11,6 +11,7 @@ import {MatTableModule} from '@angular/material/table';
 import { UpsertUserDialogComponent } from '../../../components/users/upsert-user-dialog/upsert-user-dialog.component';
 import { userDialogType } from '../../../types/dialogTypes';
 import { MatDialog } from '@angular/material/dialog';
+import { IUserTeamModel } from '../../../interfaces/iuser-team-model';
 
 @Component({
   selector: 'app-users',
@@ -29,7 +30,6 @@ export class UsersComponent implements OnInit {
 
   users: Array<IUserModel> = [];
   displayedColumns: string[] = ['name', 'surname', 'team', 'email', 'actions'];
-
 
   ngOnInit(): void {
     this.fetchData();
@@ -53,7 +53,9 @@ export class UsersComponent implements OnInit {
 
       if (result) {
         this.users = result;
-        
+        this.users.forEach(user => { 
+          user.userAssignedTeams = this.getUserTeams(user.userTeams ?? []);
+        });
       }
       
     } catch (error) {
@@ -77,6 +79,19 @@ export class UsersComponent implements OnInit {
         await loading.dismiss();
     }
   }
+
+  /**
+   * Retrieves the names of the teams associated with a user.
+   * 
+   * @param user - An array of IUserTeamModel representing the user's teams.
+   * @returns A string containing the names of the teams, separated by commas.
+   */
+  getUserTeams(user: Array<IUserTeamModel>) { 
+    if(user.length === 0) return 'No Teams Assigned';
+
+    return user.map(ut => ut.team.teamName).join(', ');
+  }
+
 
   /**
    * Handles the click event when the "Add" button is clicked.

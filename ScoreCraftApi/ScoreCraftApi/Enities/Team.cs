@@ -62,24 +62,30 @@ namespace ScoreCraftApi.Enities
             return await GetTeam(model.RefTeam);
         }
 
-        public async Task<User> AddUserToTeam(Guid RefUser, int RefTeam)
+        public async Task<User> AddUserToTeam(UserTeam model)
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.RefUser == RefUser);
-            var team = await _context.Teams.AsNoTracking().FirstOrDefaultAsync(u => u.RefTeam == RefTeam);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.RefUser == model.RefUser);
+            //var team = await _context.Teams.AsNoTracking().FirstOrDefaultAsync(u => u.RefTeam == RefTeam);
 
-            if (user is null || team is null)
+            if (user is null)
                 return null;
 
-            var userTeam = new UserTeam
+            if(model.RefTeams.Any())
             {
-                RefUser = RefUser,
-                RefTeam = RefTeam
-            };
+                model.RefTeams.ForEach(refTeam => {
+                    var userTeam = new UserTeam
+                    {
+                        RefUser = model.RefUser,
+                        RefTeam = refTeam
+                    };
 
-            _context.UserTeams.Add(userTeam);
-            await _context.SaveChangesAsync();
+                    _context.UserTeams.Add(userTeam);
+                });
 
-            return await new UsersBLL(_context).GetUser(RefUser);
+                await _context.SaveChangesAsync();
+            }
+
+            return await new UsersBLL(_context).GetUser(model.RefUser);
         }
 
         public async Task<Team> UpdateTeam(Team model)
@@ -92,9 +98,7 @@ namespace ScoreCraftApi.Enities
 
         public async Task<bool?> DeleteTeam(int? RefTeam)
         {
-
             await _context.Teams.Where(t => t.RefTeam == RefTeam).ExecuteDeleteAsync();
-            await _context.UserTeams.Where(u => u.RefTeam == RefTeam).ExecuteDeleteAsync(); // Delete Users out of the team as well
 
             return true;
         }

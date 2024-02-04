@@ -12,6 +12,7 @@ import { ITeamModel } from '../../../interfaces/i-team-model';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { IUserModel } from '../../../interfaces/i-user-model';
+import { IUserTeamModel } from '../../../interfaces/iuser-team-model';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class UpsertUserDialogComponent implements OnInit {
     name: new FormControl(this.dialogData.data.name, [Validators.required]),
     surname: new FormControl(this.dialogData.data.surname, [Validators.required]),
     email: new FormControl(this.dialogData.data.email, [Validators.email, Validators.required]),
-    team: new FormControl(this.dialogData.data.refTeam),
+    team: new FormControl(this.getTeamRefs(this.dialogData.data.userTeams ?? []), [Validators.required]),
     isTeamCaptain: new FormControl(this.dialogData.data.isTeamCaptain ?? false)
   });
 
@@ -44,6 +45,15 @@ export class UpsertUserDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTeams();
+  }
+
+  /**
+   * Retrieves an array of team references from an array of user team models.
+   * @param teams - The array of user team models.
+   * @returns An array of team references.
+   */
+  getTeamRefs(teams: Array<IUserTeamModel>): Array<number> {
+    return teams.map(team => team.refTeam!) ?? [];
   }
 
 
@@ -97,7 +107,6 @@ export class UpsertUserDialogComponent implements OnInit {
       name: this.dialogForm.controls['name'].value,
       surname: this.dialogForm.controls['surname'].value,
       email: this.dialogForm.controls['email'].value,
-      refTeam: this.dialogForm.controls['team'].value,
       isTeamCaptain: this.dialogForm.controls['isTeamCaptain'].value,
       refUser: this.dialogData.data.refUser
     };
