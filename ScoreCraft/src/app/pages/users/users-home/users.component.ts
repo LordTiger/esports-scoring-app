@@ -142,6 +142,10 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  /**
+   * Handles the click event for deleting a user.
+   * @param refUser - The reference of the user to be deleted.
+   */
   async onDeleteClick(refUser: string) {
     const alert = await this.alertController.create({
       header: 'Confirm User Deletion',
@@ -161,6 +165,11 @@ export class UsersComponent implements OnInit {
     await alert.present();
   }
 
+  /**
+   * Deletes a user with the specified reference.
+   * 
+   * @param refUser - The reference of the user to be deleted.
+   */
   private async doDelete(refUser: string) {
     const loading = await this.loadingController.create({
       message: 'Removing User...'
@@ -195,7 +204,5 @@ export class UsersComponent implements OnInit {
       await loading.dismiss();
     }
   } 
-
-
 
 }
