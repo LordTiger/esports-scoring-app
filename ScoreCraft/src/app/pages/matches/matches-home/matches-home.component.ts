@@ -21,7 +21,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './matches-home.component.html',
   styleUrl: './matches-home.component.scss'
 })
-export class MatchesHomeComponent {
+export class MatchesHomeComponent implements OnInit {
   private matchService = inject(MatchesService);
   private toastController = inject(ToastController);
   private loadingController = inject(LoadingController);

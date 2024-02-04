@@ -14,4 +14,7 @@ export interface IMatchModel {
     homeTeam?: ITeamModel;
     guestTeam?: ITeamModel;
     winningTeam?: ITeamModel;
+
+    homeTotalWon?: number;
+    guestTotalWon?: number;
 }

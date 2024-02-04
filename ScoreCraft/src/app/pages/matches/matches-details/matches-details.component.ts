@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
+import { AddMatchResultDialogComponent } from '../../../components/matches/add-match-result-dialog/add-match-result-dialog.component';
+import {matchResultDialogType}  from '../../../types/dialogTypes';
 
 @Component({
   selector: 'app-matches-details',
@@ -39,6 +41,12 @@ export class MatchesDetailsComponent implements OnInit {
   }
 
 
+  /**
+   * Fetches data for the matches-details component.
+   * Displays a loading spinner while fetching data.
+   * If successful, updates the model with the fetched data.
+   * If an error occurs, displays an error toast message.
+   */
   async fetchData() {
     const loading = await this.loadingController.create({
       message: 'Loading matches...'
@@ -62,6 +70,63 @@ export class MatchesDetailsComponent implements OnInit {
       await toast.present();
     } finally {
         await loading.dismiss();
+    }
+  }
+
+  /**
+   * Handles the click event when the "Add" button is clicked.
+   * Opens a dialog to add match result and updates the data accordingly.
+   */
+  onAddClick() {
+    const dialogData: matchResultDialogType = { 
+      title: 'Add Match Result',
+      data: {
+        refMatch: this.model.refMatch
+      }
+    }
+
+    const dialogRef = this.dialog.open(AddMatchResultDialogComponent, {
+      width: '37.5rem',
+      height: 'auto',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchData();
+
+        if(this.model.bestOf == this.model.matchResults?.length) { // Check if the match is over, set winning team based on match results
+          if(this.model.homeTotalWon! > this.model.guestTotalWon!) this.model.refMatchWinner = this.model.refHomeTeam; else this.model.refMatchWinner = this.model.refGuestTeam;
+          
+          this.setWinningTeam();
+          
+        }
+      }
+    });
+  }
+
+  /**
+   * Sets the winning team for the match.
+   */
+  private async setWinningTeam() {
+    try {
+      const result = await this.matchService.update(this.model);
+
+      if (result) {
+        const toast = await this.toastController.create({
+          message: 'Match result updated!',
+          duration: 2000,
+          color: 'success'
+        });
+        await toast.present();
+      }
+    } catch (error) { 
+      const toast = await this.toastController.create({
+        message: error as string,
+        duration: 2000,
+        color: 'danger'
+      });
+      await toast.present();
     }
   }
 

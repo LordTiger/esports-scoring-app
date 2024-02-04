@@ -6,6 +6,7 @@ export interface ITeamModel {
     refTeam?: number;
     teamName?: string;
     teamSize?: number;
+    winningRatio?: number;
     members?: Array<IUserModel>;
     matches?: Array<IMatchModel>;
     userTeams?: Array<IUserTeamModel>;

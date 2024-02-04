@@ -50,6 +50,17 @@ namespace ScoreCraftApi.Controllers
             return Ok(newMatch);
         }
 
+        [HttpPost("AddMatchResult")]
+        public ActionResult<MatchResult> AddMatchResult(MatchResult model)
+        {
+            var newMatchResult = new MatchResultsBLL(_context).InsertMatchResult(model).Result;
+
+            if (newMatchResult is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
+
+            return Ok(newMatchResult);
+        }
+
+
         [HttpPut("Update")]
         public ActionResult<Match> Update(Match model)
         {

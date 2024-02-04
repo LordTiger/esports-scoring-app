@@ -50,16 +50,13 @@ export class UpsertMatchDialogComponent implements OnInit {
   isEdit: boolean = this.dialogData.isEdit;
 
   teamsList: Array<ITeamModel> = [];
-  bestOfOptions: Array<string> = ['1', '3', '5'];
+  bestOfOptions: Array<number> = [1, 3, 5];
   formatOptions: Array<string> = [];
   oppositeTeamList: WritableSignal<Array<ITeamModel>> = signal([]);
 
   ngOnInit() {
     this.getTeams();
   }
-
-
-
 
   /**
    * Handles the form submission.

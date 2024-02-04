@@ -30,6 +30,10 @@ export class MatchesService {
     return lastValueFrom(this.httpClient.post<IMatchModel>(`${this.apiUrl}/Insert`, model));
   }
 
+  addMatchResult(model: IMatchResultModel) {
+    return lastValueFrom(this.httpClient.post<IMatchResultModel>(`${this.apiUrl}/AddMatchResult`, model));
+  }
+
   update(model: IMatchModel) {
     return lastValueFrom(this.httpClient.put<IMatchModel>(`${this.apiUrl}/Update`, model));
   }

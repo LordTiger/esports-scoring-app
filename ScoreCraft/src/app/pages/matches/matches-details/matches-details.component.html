@@ -8,7 +8,7 @@
             <div class="team-name"> {{model.homeTeam?.teamName}}</div>
           </div>
           
-          <div class="score">2 - 1</div>
+          <div class="score">{{model.homeTotalWon}} - {{model.guestTotalWon}}</div>
           <div>
             <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
             <div class="team-name"> {{model.guestTeam?.teamName}}</div>
@@ -22,28 +22,33 @@
         
        <div class="match_history">
         <h2>Match History</h2>
-        <button mat-raised-button color="primary" class="add-match-result">Add Match Result</button>
-        <mat-card>
-            <mat-card-header>
-              </mat-card-header>
-              <mat-card-content>
-                <div class="info">
-                    <div>Game 1</div>
-                    <div class="result-info">
-                      <div >
-                        <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
-                        <div class="team-name"> {{model.homeTeam?.teamName}}</div>
+        <button mat-raised-button color="primary" class="add-match-result" (click)="onAddClick()" 
+        [disabled]="model.matchResults?.length == model.bestOf">Add Match Result</button>
+        @for ( item of model.matchResults; track item.refMatchResult) {
+            <mat-card>
+                <mat-card-header>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="info">
+                        <div>Game {{$index + 1}}</div>
+                        <div class="result-info">
+                          <div >
+                            <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+                            <div class="team-name"> {{model.homeTeam?.teamName}}</div>
+                          </div>
+                          
+                          <div class="score">{{item.homeResult}} - {{item.guestResult}}</div>
+                          <div >
+                            <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+                            <div class="team-name"> {{model.guestTeam?.teamName}}</div>
+                          </div>
+                        </div>
                       </div>
-                      
-                      <div class="score">2 - 1</div>
-                      <div >
-                        <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
-                        <div class="team-name"> {{model.guestTeam?.teamName}}</div>
-                      </div>
-                    </div>
-                  </div>
-              </mat-card-content>
-        </mat-card>
+                  </mat-card-content>
+            </mat-card>
+        } @empty { 
+            <div class="empty">No match results</div>
+        }
        </div>
     </div>
   </div>

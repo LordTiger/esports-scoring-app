@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using ScoreCraftApi.Data;
+using Microsoft.AspNetCore.Components.Web.Virtualization;
 namespace ScoreCraftApi.Enities
 {
     public class Match
@@ -17,9 +18,33 @@ namespace ScoreCraftApi.Enities
         public int BestOf { get; set; }
         public ICollection<MatchResult>? MatchResults { get; set; }
 
-        public Team? HomeTeam { get; set; }
-        public Team? GuestTeam { get; set; }
-        public Team? WinningTeam { get; set; }
+        [NotMapped]
+        public virtual int HomeTotalWon
+        {
+            get
+            {
+                if (MatchResults == null)
+                    return 0;
+
+                return MatchResults.Count(mr => mr.HomeResult > mr.GuestResult);
+            }
+        }
+
+        [NotMapped]
+        public virtual int GuestTotalWon
+        {
+            get
+            {
+                if (MatchResults == null)
+                    return 0;
+
+                return MatchResults.Count(mr => mr.GuestResult > mr.HomeResult);
+            }
+        }
+
+        public virtual Team? HomeTeam { get; set; }
+        public virtual Team? GuestTeam { get; set; }
+        public virtual Team? WinningTeam { get; set; }
     }
 
     public class MatchesBLL
@@ -53,6 +78,29 @@ namespace ScoreCraftApi.Enities
                 .ToListAsync();
 
             return matches;
+        }
+
+        public async Task<List<Match>> GetTeamMatchCollection(int? RefTeam)
+        {
+            //return await _context.Matches.ToListAsync();
+            var matches = await _context.Matches.AsNoTracking()
+                .Select(m => new Match()
+                {
+                    RefMatch = m.RefMatch,
+                    RefHomeTeam = m.RefHomeTeam,
+                    RefGuestTeam = m.RefGuestTeam,
+                    MatchDate = m.MatchDate,
+                    RefMatchWinner = m.RefMatchWinner,
+                    Format = m.Format,
+                    BestOf = m.BestOf,
+                    HomeTeam = m.HomeTeam ?? new Team() { },
+                    GuestTeam = m.GuestTeam ?? new Team() { },
+                    WinningTeam = m.WinningTeam ?? new Team() { },
+                    MatchResults = m.MatchResults
+                })
+                .ToListAsync();
+
+            return matches.Where(m => m.RefHomeTeam == RefTeam || m.RefGuestTeam == RefTeam).ToList();
         }
 
         public async Task<Match> GetMatch(int RefMatch)

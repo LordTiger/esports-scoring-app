@@ -17,8 +17,8 @@ namespace ScoreCraftApi.Enities
 
 
         // Navigation Properties
-        public ICollection<Match>? Matches { get; set; }
-        public ICollection<UserTeam>? UserTeams { get; set; }
+        public virtual ICollection<Match>? Matches { get; set; }
+        public virtual ICollection<UserTeam>? UserTeams { get; set; }
     }
 
     public class TeamBLL
@@ -32,15 +32,15 @@ namespace ScoreCraftApi.Enities
 
         public async Task<List<Team>> GetTeamsCollection()
         {
-            //return await _context.Teams.AsNoTracking().ToListAsync();
+
             var teams = await _context.Teams.AsNoTracking()
-            .Include(t => t.Matches)  // Include the Matches navigation property
+            .Include(m => m.Matches)  // Include the Matches navigation property
             .Select(t => new Team()
             {
                 RefTeam = t.RefTeam,
                 TeamName = t.TeamName,
                 TeamSize = t.UserTeams!.Count,
-                Matches = _context.Matches!.Where(m => m.RefHomeTeam == t.RefTeam || m.RefGuestTeam == t.RefTeam).ToList()
+                Matches = new MatchesBLL(_context).GetTeamMatchCollection(t.RefTeam).Result
             })
             .ToListAsync();
 

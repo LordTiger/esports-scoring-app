@@ -11,6 +11,7 @@ import { ITeamModel } from '../../../interfaces/i-team-model';
 import { MatDialog } from '@angular/material/dialog';
 import { UpsertTeamDialogComponent } from '../../../components/teams/upsert-team-dialog/upsert-team-dialog.component';
 import { teamDialogType } from '../../../types/dialogTypes';
+import { IMatchModel } from '../../../interfaces/i-match-model';
 @Component({
   selector: 'app-teams',
   standalone: true,
@@ -51,6 +52,7 @@ export class TeamsComponent implements OnInit {
 
       if (result) {
         this.teams = result;
+        this.teams.forEach(team => team.winningRatio = this.calculateWinningRatio(team.matches ?? [], team.refTeam!)!);
       }
       
     } catch (error) {
@@ -63,6 +65,15 @@ export class TeamsComponent implements OnInit {
     } finally {
         await loading.dismiss();
     }
+  }
+
+  private calculateWinningRatio(teamMatches: Array<IMatchModel>, refTeam: number): number { 
+    if(teamMatches.length === 0) {
+      return 0;
+    }
+
+    const wins = teamMatches.filter(match => match.refMatchWinner === refTeam).length;
+    return (wins / teamMatches.length) * 100;
   }
 
   /**
