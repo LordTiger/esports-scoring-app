@@ -15,15 +15,17 @@ import { MAT_DATE_LOCALE, MatNativeDateModule, provideNativeDateAdapter } from '
 import {MatRadioModule} from '@angular/material/radio';
 import { IMatchModel } from '../../../interfaces/i-match-model';
 import { MatchesService } from '../../../services/matches.service';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MatMomentDateModule} from '@angular/material-moment-adapter'
 @Component({
   selector: 'app-upsert-match-dialog',
   templateUrl: './upsert-match-dialog.component.html',
   styleUrls: ['./upsert-match-dialog.component.scss'],
   standalone: true,
   imports: [MatDialogModule, MatFormFieldModule, MatButtonModule, FormsModule, ReactiveFormsModule,
-     MatSelectModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule, MatRadioModule],
+     MatSelectModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule, MatRadioModule, MatMomentDateModule],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'en-ZA'},
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true }},
     provideNativeDateAdapter()
   ]
 })
