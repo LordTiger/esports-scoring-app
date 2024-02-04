@@ -1,1 +1,49 @@
-<p>matches-details works!</p>
+<div class="container">
+    <div class="top">
+      <div class="info">
+        <div>{{model.matchDate | date: 'dd MMMM yyyy'}}</div>
+        <div class="team-info">
+          <div>
+            <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+            <div class="team-name"> {{model.homeTeam?.teamName}}</div>
+          </div>
+          
+          <div class="score">2 - 1</div>
+          <div>
+            <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+            <div class="team-name"> {{model.guestTeam?.teamName}}</div>
+          </div>
+         
+        </div>
+        <div class="bo">BO{{model.bestOf}}</div>
+      </div>
+    </div>
+    <div class="bottom">
+        
+       <div class="match_history">
+        <h2>Match History</h2>
+        <button mat-raised-button color="primary" class="add-match-result">Add Match Result</button>
+        <mat-card>
+            <mat-card-header>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="info">
+                    <div>Game 1</div>
+                    <div class="result-info">
+                      <div >
+                        <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+                        <div class="team-name"> {{model.homeTeam?.teamName}}</div>
+                      </div>
+                      
+                      <div class="score">2 - 1</div>
+                      <div >
+                        <img class="team-logo" src="https://ionicframework.com/docs/img/demos/avatar.svg" alt="Team 1 Logo" >
+                        <div class="team-name"> {{model.guestTeam?.teamName}}</div>
+                      </div>
+                    </div>
+                  </div>
+              </mat-card-content>
+        </mat-card>
+       </div>
+    </div>
+  </div>

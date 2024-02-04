@@ -18,7 +18,7 @@ export class MatchesService {
   }
 
   getMatch(RefMatch: number) {
-    return lastValueFrom(this.httpClient.get<Array<IMatchModel>>(`${this.apiUrl}/GetMatch`, { params: { RefMatch: RefMatch } }));
+    return lastValueFrom(this.httpClient.get<IMatchModel>(`${this.apiUrl}/GetMatch`, { params: { RefMatch: RefMatch } }));
   }
 
   getMatchResult(RefMatch: number) {

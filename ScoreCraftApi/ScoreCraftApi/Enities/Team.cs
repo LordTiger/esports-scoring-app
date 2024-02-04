@@ -12,6 +12,9 @@ namespace ScoreCraftApi.Enities
         public int? RefTeam { get; set; }
         public string? TeamName { get; set; }
 
+        [NotMapped]
+        public virtual int? TeamSize { get; set; }
+
 
         // Navigation Properties
         public ICollection<Match>? Matches { get; set; }
@@ -29,7 +32,19 @@ namespace ScoreCraftApi.Enities
 
         public async Task<List<Team>> GetTeamsCollection()
         {
-            return await _context.Teams.AsNoTracking().ToListAsync();
+            //return await _context.Teams.AsNoTracking().ToListAsync();
+            var teams = await _context.Teams.AsNoTracking()
+            .Include(t => t.Matches)  // Include the Matches navigation property
+            .Select(t => new Team()
+            {
+                RefTeam = t.RefTeam,
+                TeamName = t.TeamName,
+                TeamSize = t.UserTeams!.Count,
+                Matches = _context.Matches!.Where(m => m.RefHomeTeam == t.RefTeam || m.RefGuestTeam == t.RefTeam).ToList()
+            })
+            .ToListAsync();
+
+            return teams;
         }
 
         public async Task<List<Team>> GetUserTeams(Guid RefUser)

@@ -1,0 +1,92 @@
+<h2 mat-dialog-title [innerHTML]="dialogTitle"></h2>
+<mat-dialog-content>
+  <form [formGroup]="dialogForm">
+
+    <mat-form-field class="full-width">
+      <mat-label>Choose match date</mat-label>
+      <input matInput [matDatepicker]="picker" name="matchDate" formControlName="matchDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker">
+        <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+
+      <mat-error>This field is required </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Home Team</mat-label>
+      <mat-select placeholder="Select team"  formControlName="refHomeTeam" name="refHomeTeam" (selectionChange)="filterTeams()">
+        @for (team of teamsList; track team.refTeam) {
+          <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
+        }
+      </mat-select>
+      <mat-error>This field is required </mat-error>
+    </mat-form-field>
+   
+
+   @if(dialogForm.controls['refHomeTeam'].value) {
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Guest Team</mat-label>
+      <mat-select placeholder="Select the opposite team"  formControlName="refGuestTeam" name="refGuestTeam" (selectionChange)="setFormatOptions()">
+        @for (team of oppositeTeamList(); track team.refTeam) {
+          <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
+        }
+      </mat-select>
+      <mat-error>This field is required </mat-error>
+    </mat-form-field>
+   }
+   
+ 
+    <label id="best-of-label">
+      Select best out of
+      @if(dialogForm.controls['bestOf'].hasError('required')) { 
+        <small><mat-error>This field is required </mat-error></small>
+      }
+    </label>
+    <mat-radio-group
+      aria-labelledby="best-of-label"
+      class="radio-group" 
+      name="bestOf" formControlName="bestOf">
+      @for (item of bestOfOptions; track item) {
+        <mat-radio-button class="radio-button" [value]="item">{{item}}</mat-radio-button>
+      }
+    </mat-radio-group>
+
+  
+  
+
+    @if(formatOptions.length > 0) {
+      <label id="game-format-label">
+        Select an game format
+        @if(dialogForm.controls['bestOf'].hasError('required')){
+          <small><mat-error>This field is required </mat-error></small>
+        }
+      </label>
+      <mat-radio-group
+        aria-labelledby="game-format-label"
+        class="radio-group" 
+        name="format" formControlName="format">
+        @for (item of formatOptions; track item) {
+          <mat-radio-button class="radio-button" [value]="item">{{item}}</mat-radio-button>
+        }
+      </mat-radio-group>
+    } @else if(!dialogForm.controls['refGuestTeam'].value) {
+      <div>Choose a guest team to see game format.</div>
+    } 
+    @else {
+      <div>One or more teams don't have enough players to participate.</div>
+    }
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>
+      Cancel
+      <mat-icon>close</mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <button mat-flat-button color="primary" type="button" (click)="onSubmit()" [disabled]="dialogForm.invalid">
+      Submit
+      <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

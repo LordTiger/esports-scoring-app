@@ -34,12 +34,45 @@ namespace ScoreCraftApi.Enities
 
         public async Task<List<Match>> GetMatchesCollection()
         {
-            return await _context.Matches.ToListAsync();
+            //return await _context.Matches.ToListAsync();
+            var matches = await _context.Matches.AsNoTracking()
+                .Select(m => new Match()
+                {
+                    RefMatch = m.RefMatch,
+                    RefHomeTeam = m.RefHomeTeam,
+                    RefGuestTeam = m.RefGuestTeam,
+                    MatchDate = m.MatchDate,
+                    RefMatchWinner = m.RefMatchWinner,
+                    Format = m.Format,
+                    BestOf = m.BestOf,
+                    HomeTeam = m.HomeTeam ?? new Team() { },
+                    GuestTeam = m.GuestTeam ?? new Team() { },
+                    WinningTeam = m.WinningTeam ?? new Team() { },
+                    MatchResults = m.MatchResults
+                })
+                .ToListAsync();
+
+            return matches;
         }
 
         public async Task<Match> GetMatch(int RefMatch)
         {
-            var match = await _context.Matches.FindAsync(RefMatch);
+            var match = await _context.Matches.AsNoTracking()
+                .Select(m => new Match()
+                {
+                    RefMatch = m.RefMatch,
+                    RefHomeTeam = m.RefHomeTeam,
+                    RefGuestTeam = m.RefGuestTeam,
+                    MatchDate = m.MatchDate,
+                    RefMatchWinner = m.RefMatchWinner,
+                    Format = m.Format,
+                    BestOf = m.BestOf,
+                    HomeTeam = m.HomeTeam ?? new Team() { },
+                    GuestTeam = m.GuestTeam ?? new Team() { },
+                    WinningTeam = m.WinningTeam ?? new Team() { },
+                    MatchResults = m.MatchResults
+                })
+                .FirstOrDefaultAsync( m => m.RefMatch == RefMatch);
 
             if (match is null) return null;
 

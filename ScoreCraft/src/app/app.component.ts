@@ -32,7 +32,7 @@ export class AppComponent {
     {
       label: 'Matches',
       href: 'matches',
-      iconName: 'sports_soccer'
+      iconName: 'games'
     }
   ];
 

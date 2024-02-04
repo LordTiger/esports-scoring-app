@@ -13,8 +13,6 @@ export const routes: Routes = [
     //Matches
     { path: 'matches', loadComponent: () => import('./pages/matches/matches-home/matches-home.component').then(m => m.MatchesHomeComponent), data: {menu: SideNavBarComponent}, title: 'Home - Matches'},
     { path: 'matches/details/:refMatch', loadComponent: () => import('./pages/matches/matches-details/matches-details.component').then(m => m.MatchesDetailsComponent),data: {menu: SideNavBarComponent} },
-    //MatchResults
-    { path: 'matches/results/:refMatchResult', loadComponent: () => import('./pages/matches/match-results/match-results.component').then(m => m.MatchResultsComponent), data: {menu: SideNavBarComponent} },
 
     // Wildcard Route 
     { path: '**', redirectTo: '/home', pathMatch: 'full' }

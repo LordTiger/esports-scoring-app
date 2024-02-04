@@ -5,6 +5,7 @@ import { IUserTeamModel } from "./i-user-team-model";
 export interface ITeamModel {
     refTeam?: number;
     teamName?: string;
+    teamSize?: number;
     members?: Array<IUserModel>;
     matches?: Array<IMatchModel>;
     userTeams?: Array<IUserTeamModel>;
