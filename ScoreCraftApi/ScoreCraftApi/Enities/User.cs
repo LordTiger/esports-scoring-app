@@ -11,18 +11,14 @@ namespace ScoreCraftApi.Enities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public Guid RefUser { get; set; }
-
-        public int? RefTeam { get; set; }
         public bool IsTeamCaptain { get; set; }
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string? Email { get; set; }
 
-        [ForeignKey("RefTeam")]
-        public virtual Team? Team { get; set; }
-
         // Navigation Properties
         public ICollection<Match>? Matches { get; set; }
+        public ICollection<UserTeam>? UserTeams { get; set; }
     }
 
     public class UsersBLL {
@@ -63,7 +59,6 @@ namespace ScoreCraftApi.Enities
                 n.SetProperty(u => u.Name, model.Name)
                 .SetProperty(u => u.Surname, model.Surname)
                 .SetProperty(u => u.Email, model.Email)
-                .SetProperty(u => u.RefTeam, model.RefTeam)
                 .SetProperty(u => u.IsTeamCaptain, model.IsTeamCaptain));
 
             return await GetUser(model.RefUser);
@@ -71,14 +66,7 @@ namespace ScoreCraftApi.Enities
 
         public async Task<bool?> Delete(Guid RefUser) 
         {
-            //var dbUser = await _context.Users.AsNoTracking().FirstOrDefaultAsync(w => w.RefUser == RefUser);
-
-            //if (dbUser is null) return null;
-
-            //_context.Users.Remove(dbUser);
-            //await _context.SaveChangesAsync();
-
-           await _context.Users.Where(u => u.RefUser == RefUser).ExecuteDeleteAsync();
+            await _context.Users.Where(u => u.RefUser == RefUser).ExecuteDeleteAsync();
 
             return true;
         }

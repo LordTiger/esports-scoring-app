@@ -14,8 +14,9 @@ namespace ScoreCraftApi.Enities
 
 
         // Navigation Properties
-        public ICollection<User> Members { get; set; }
-        public ICollection<Match> Matches { get; set; }
+        public ICollection<User>? Members { get; set; }
+        public ICollection<Match>? Matches { get; set; }
+        public ICollection<UserTeam>? UserTeams { get; set; }
     }
 
     public class TeamBLL
@@ -29,12 +30,24 @@ namespace ScoreCraftApi.Enities
 
         public async Task<List<Team>> GetTeamsCollection()
         {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams.AsNoTracking().ToListAsync();
         }
+
+        public async Task<List<Team>> GetUserTeams(Guid RefUser)
+        {
+
+            var userTeams = await _context.UserTeams.AsNoTracking()
+                .Where(w => w.RefUser == RefUser)
+                .Select(s => s.Team)
+                .ToListAsync();
+
+            return userTeams;
+
+        }   
 
         public async Task<Team> GetTeam(int? RefTeam)
         {
-            var team = await _context.Teams.FindAsync(RefTeam);
+            var team = await _context.Teams.AsNoTracking().FirstOrDefaultAsync(u => u.RefTeam == RefTeam);
 
             if (team is null) return null;
 
@@ -49,29 +62,46 @@ namespace ScoreCraftApi.Enities
             return await GetTeam(model.RefTeam);
         }
 
-        public async Task<Team> UpdateTeam(Team model)
+        public async Task<User> AddUserToTeam(Guid RefUser, int RefTeam)
         {
-            var dbTeam = await _context.Teams.FindAsync(model.RefTeam);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.RefUser == RefUser);
+            var team = await _context.Teams.AsNoTracking().FirstOrDefaultAsync(u => u.RefTeam == RefTeam);
 
-            if (dbTeam is null)
+            if (user is null || team is null)
                 return null;
 
-            dbTeam.TeamName = model.TeamName;
+            var userTeam = new UserTeam
+            {
+                RefUser = RefUser,
+                RefTeam = RefTeam
+            };
 
+            _context.UserTeams.Add(userTeam);
             await _context.SaveChangesAsync();
+
+            return await new UsersBLL(_context).GetUser(RefUser);
+        }
+
+        public async Task<Team> UpdateTeam(Team model)
+        {
+            await _context.Teams.Where(t => t.RefTeam == model.RefTeam).ExecuteUpdateAsync(n =>
+                           n.SetProperty(t => t.TeamName, model.TeamName));
 
             return await GetTeam(model.RefTeam);
         }
 
         public async Task<bool?> DeleteTeam(int? RefTeam)
         {
-            var dbTeam = await _context.Teams.FindAsync(RefTeam);
 
-            if (dbTeam is null)
-                return false;
+            await _context.Teams.Where(t => t.RefTeam == RefTeam).ExecuteDeleteAsync();
+            await _context.UserTeams.Where(u => u.RefTeam == RefTeam).ExecuteDeleteAsync(); // Delete Users out of the team as well
 
-            _context.Teams.Remove(dbTeam);
-            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool?> RemoveUserFromTeam(Guid RefUser, int RefTeam)
+        {
+            await _context.UserTeams.Where(u => u.RefUser == RefUser && u.RefTeam == RefTeam).ExecuteDeleteAsync();
 
             return true;
         }

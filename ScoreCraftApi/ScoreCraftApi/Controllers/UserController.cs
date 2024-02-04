@@ -22,6 +22,12 @@ namespace ScoreCraftApi.Controllers
             return Ok(await new UsersBLL(_context).GetUserCollection());
         }
 
+        [HttpGet("GetUserTeams")]
+        public async Task<ActionResult<List<Team>>> GetUserTeams(Guid RefUser)
+        {
+            return Ok(await new TeamBLL(_context).GetUserTeams(RefUser));
+        }
+
         [HttpGet("GetUser")]
         public async Task<ActionResult<User>> GetUser(Guid RefUser) 
         {

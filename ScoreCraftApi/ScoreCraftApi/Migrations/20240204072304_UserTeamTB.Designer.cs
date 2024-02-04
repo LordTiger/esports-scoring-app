@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScoreCraftApi.Data;
 
@@ -11,9 +12,11 @@ using ScoreCraftApi.Data;
 namespace ScoreCraftApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240204072304_UserTeamTB")]
+    partial class UserTeamTB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,15 +128,15 @@ namespace ScoreCraftApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("RefTeam")
+                        .HasColumnType("int");
+
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamRefTeam")
-                        .HasColumnType("int");
-
                     b.HasKey("RefUser");
 
-                    b.HasIndex("TeamRefTeam");
+                    b.HasIndex("RefTeam");
 
                     b.ToTable("Users");
                 });
@@ -150,7 +153,7 @@ namespace ScoreCraftApi.Migrations
 
                     b.HasIndex("RefTeam");
 
-                    b.ToTable("UserTeams");
+                    b.ToTable("UserTeam");
                 });
 
             modelBuilder.Entity("ScoreCraftApi.Enities.Match", b =>
@@ -196,9 +199,11 @@ namespace ScoreCraftApi.Migrations
 
             modelBuilder.Entity("ScoreCraftApi.Enities.User", b =>
                 {
-                    b.HasOne("ScoreCraftApi.Enities.Team", null)
+                    b.HasOne("ScoreCraftApi.Enities.Team", "Team")
                         .WithMany("Members")
-                        .HasForeignKey("TeamRefTeam");
+                        .HasForeignKey("RefTeam");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("ScoreCraftApi.Enities.UserTeam", b =>

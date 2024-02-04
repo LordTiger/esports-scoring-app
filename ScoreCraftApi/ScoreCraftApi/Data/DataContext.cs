@@ -13,10 +13,11 @@ namespace ScoreCraftApi.Data
         public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<MatchResult> MatchResults { get; set; }
+        public DbSet<UserTeam> UserTeams { get; set; }
 
 
        protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+       {
         modelBuilder.Entity<Match>()
             .HasOne(m => m.HomeTeam)
             .WithMany()
@@ -35,10 +36,22 @@ namespace ScoreCraftApi.Data
             .HasForeignKey(m => m.RefMatchWinner)
             .OnDelete(DeleteBehavior.Restrict);
 
-            // Additional configurations if needed
+        // Configure many-to-many relationship
+        modelBuilder.Entity<UserTeam>()
+            .HasKey(ut => new { ut.RefUser, ut.RefTeam });
+
+        modelBuilder.Entity<UserTeam>()
+            .HasOne(ut => ut.User)
+            .WithMany(u => u.UserTeams)
+            .HasForeignKey(ut => ut.RefUser);
+
+        modelBuilder.Entity<UserTeam>()
+            .HasOne(ut => ut.Team)
+            .WithMany(t => t.UserTeams)
+            .HasForeignKey(ut => ut.RefTeam);
 
             base.OnModelCreating(modelBuilder);
-    }
+        }
 
     }
 }

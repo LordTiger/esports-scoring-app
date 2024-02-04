@@ -17,24 +17,34 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpGet("GetCollection")]
-        public ActionResult<List<Team>> GetTeamsCollection()
+        public async Task<ActionResult<List<Team>>> GetTeamsCollection()
         {
-            return Ok( new TeamBLL(_context).GetTeamsCollection().Result);
+            return Ok( await new TeamBLL(_context).GetTeamsCollection());
         }
 
         [HttpGet("GetTeam")]
-        public ActionResult<Team> GetTeam(int RefTeam)
+        public async Task<ActionResult<Team>> GetTeam(int RefTeam)
         {
-            var team = new TeamBLL(_context).GetTeam(RefTeam).Result;
+            var team = await new TeamBLL(_context).GetTeam(RefTeam);
 
             if (team is null) return NotFound("Team not found");
             return Ok(team);
         }
 
         [HttpPost("Insert")]
-        public  ActionResult<Team> Insert(Team model)
+        public async Task<ActionResult<Team>> Insert(Team model)
         {
-            var newTeam = new TeamBLL(_context).InsertTeam(model).Result;
+            var newTeam = await new TeamBLL(_context).InsertTeam(model);
+
+            if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
+
+            return Ok(newTeam);
+        }
+
+        [HttpPost("AddUserToTeam")]
+        public async Task<ActionResult<User>> AddUserToTeam(UserTeam model)
+        {
+            var newTeam = await new TeamBLL(_context).AddUserToTeam(model.RefUser, model.RefTeam);
 
             if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -42,9 +52,9 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpPut("Update")]
-        public ActionResult<Team> Update(Team model)
+        public async Task<ActionResult<Team>> Update(Team model)
         {
-            var newTeam = new TeamBLL(_context).UpdateTeam(model).Result;
+            var newTeam = await new TeamBLL(_context).UpdateTeam(model);
 
             if (newTeam is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -52,9 +62,9 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpDelete("Delete")]
-        public ActionResult<bool> Delete(int RefTeam)
+        public async Task<ActionResult<bool>> Delete(int RefTeam)
         {
-            var isTeamDeleted = new TeamBLL(_context).DeleteTeam(RefTeam).Result;
+            var isTeamDeleted = await new TeamBLL(_context).DeleteTeam(RefTeam);
 
             if (isTeamDeleted is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
