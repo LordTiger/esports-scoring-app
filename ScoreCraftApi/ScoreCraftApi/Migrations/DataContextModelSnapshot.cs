@@ -36,8 +36,10 @@ namespace ScoreCraftApi.Migrations
                     b.Property<string>("Format")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsArchived")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("MatchDate")
                         .HasColumnType("datetime2");
@@ -99,8 +101,10 @@ namespace ScoreCraftApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RefTeam"));
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("bit");
+                    b.Property<bool?>("IsArchived")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("TeamName")
                         .HasColumnType("nvarchar(max)");

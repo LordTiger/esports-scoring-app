@@ -18,6 +18,14 @@ namespace ScoreCraftApi.Data
 
        protected override void OnModelCreating(ModelBuilder modelBuilder)
        {
+            modelBuilder.Entity<Team>()
+                .Property<bool?>("IsArchived")
+                .HasDefaultValue(false);
+
+            modelBuilder.Entity<Match>()
+                .Property<bool?>("IsArchived")
+                .HasDefaultValue(false);
+
             // Add cascading delete
             modelBuilder.Entity<Match>()
                 .HasOne(m => m.HomeTeam)

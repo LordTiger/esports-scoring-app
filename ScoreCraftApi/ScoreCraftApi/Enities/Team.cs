@@ -11,7 +11,7 @@ namespace ScoreCraftApi.Enities
         [Key]
         public int? RefTeam { get; set; }
         public string? TeamName { get; set; }
-        public bool IsArchived { get; set; }
+        public bool? IsArchived { get; set; }
 
         [NotMapped]
         public virtual int? TeamSize { get; set; }
@@ -56,7 +56,7 @@ namespace ScoreCraftApi.Enities
                     WinningTeam = m.WinningTeam ?? new Team() { },
                     MatchResults = m.MatchResults
                 }).Where(m => m.RefHomeTeam == t.RefTeam || m.RefGuestTeam == t.RefTeam).ToList()
-            }).Where(t => t.IsArchived == false).ToListAsync();
+            }).Where(t => t.IsArchived == false  || t.IsArchived == null).ToListAsync();
 
             return teams;
         }

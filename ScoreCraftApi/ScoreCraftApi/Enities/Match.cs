@@ -16,7 +16,7 @@ namespace ScoreCraftApi.Enities
         public int? RefMatchWinner { get; set; }
         public string? Format { get; set; } // Corrected property name
         public int? BestOf { get; set; }
-        public bool IsArchived { get; set; }
+        public bool? IsArchived { get; set; }
         public ICollection<MatchResult>? MatchResults { get; set; }
 
         [NotMapped]
@@ -78,7 +78,7 @@ namespace ScoreCraftApi.Enities
                     MatchResults = m.MatchResults
                 }).ToListAsync();
 
-            return matches.Where(m => m.IsArchived == false).ToList();
+            return matches.Where(m => m.IsArchived == false || m.IsArchived == null).ToList();
         }
 
         public async Task<List<Match>> GetTeamMatchCollection(int? RefTeam)
@@ -121,7 +121,7 @@ namespace ScoreCraftApi.Enities
                     WinningTeam = m.WinningTeam ?? new Team() { },
                     MatchResults = m.MatchResults
                 })
-                .FirstOrDefaultAsync( m => m.RefMatch == RefMatch && m.IsArchived == false);
+                .FirstOrDefaultAsync( m => m.RefMatch == RefMatch && m.IsArchived == false || m.IsArchived == null);
 
             if (match is null) return null;
 

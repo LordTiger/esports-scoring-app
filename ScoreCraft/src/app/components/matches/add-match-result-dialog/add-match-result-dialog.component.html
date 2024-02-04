@@ -4,13 +4,13 @@
 
   <mat-form-field appearance="fill" class="full-width">
       <mat-label>Home Score</mat-label>
-      <input matInput type="number" placeholder="10" formControlName="homeResult" name="homeResult">
+      <input matInput type="number" min="0" max="100" placeholder="10" formControlName="homeResult" name="homeResult">
       <mat-error>This field is required </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Guest Score</mat-label>
-    <input matInput type="number" placeholder="5" formControlName="guestResult" name="guestResult">
+    <input matInput type="number" min="0" max="100" placeholder="5" formControlName="guestResult" name="guestResult">
     <mat-error>This field is required </mat-error>
   </mat-form-field>
    

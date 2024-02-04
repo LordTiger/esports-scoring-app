@@ -28,7 +28,7 @@ export class AddMatchResultDialogComponent  implements OnInit {
 
 
   dialogForm: FormGroup = new FormGroup({
-    homeResult: new FormControl(this.dialogData.data.homeResult, [Validators.required]),
+    homeResult: new FormControl(this.dialogData.data.homeResult, [Validators.required,]),
     guestResult: new FormControl(this.dialogData.data.guestResult, [Validators.required]),
   });
 
