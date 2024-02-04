@@ -24,6 +24,14 @@ export class TeamsService {
   }
 
   /**
+ * Retrieves the collection of teams from the server.
+ * @returns {Observable<Array<ITeamModel>>} The collection of teams.
+ */
+  getTeamsForLookup() {
+    return lastValueFrom(this.httpClient.get<Array<ITeamModel>>(`${this.apiUrl}/getTeamsForLookup`));
+  }
+
+  /**
    * Retrieves a team based on the provided reference team number.
    * @param RefTeam The reference team number.
    * @returns A promise that resolves to an array of ITeamModel.

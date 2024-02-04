@@ -12,10 +12,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { UpsertTeamDialogComponent } from '../../../components/teams/upsert-team-dialog/upsert-team-dialog.component';
 import { teamDialogType } from '../../../types/dialogTypes';
 import { IMatchModel } from '../../../interfaces/i-match-model';
+import { DecimalPipe } from '@angular/common';
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [RibbonComponent, MatToolbarModule, MatButtonModule, MatIconModule, MatTooltipModule, MatTableModule],
+  imports: [RibbonComponent, MatToolbarModule, MatButtonModule, MatIconModule, MatTooltipModule, MatTableModule, DecimalPipe],
   templateUrl: './teams.component.html',
   styleUrl: './teams.component.scss'
 })

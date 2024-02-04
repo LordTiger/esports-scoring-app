@@ -9,13 +9,14 @@ namespace ScoreCraftApi.Enities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public int RefMatch { get; set; }
+        public int? RefMatch { get; set; }
         public int? RefHomeTeam { get; set; }
         public int? RefGuestTeam { get; set; }
-        public DateTime MatchDate { get; set; }
+        public DateTime? MatchDate { get; set; }
         public int? RefMatchWinner { get; set; }
         public string? Format { get; set; } // Corrected property name
-        public int BestOf { get; set; }
+        public int? BestOf { get; set; }
+        public bool IsArchived { get; set; }
         public ICollection<MatchResult>? MatchResults { get; set; }
 
         [NotMapped]
@@ -61,6 +62,7 @@ namespace ScoreCraftApi.Enities
         {
             //return await _context.Matches.ToListAsync();
             var matches = await _context.Matches.AsNoTracking()
+                .Where(m => m.IsArchived == false)
                 .Select(m => new Match()
                 {
                     RefMatch = m.RefMatch,
@@ -74,10 +76,9 @@ namespace ScoreCraftApi.Enities
                     GuestTeam = m.GuestTeam ?? new Team() { },
                     WinningTeam = m.WinningTeam ?? new Team() { },
                     MatchResults = m.MatchResults
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
-            return matches;
+            return matches.Where(m => m.IsArchived == false).ToList();
         }
 
         public async Task<List<Match>> GetTeamMatchCollection(int? RefTeam)
@@ -97,13 +98,12 @@ namespace ScoreCraftApi.Enities
                     GuestTeam = m.GuestTeam ?? new Team() { },
                     WinningTeam = m.WinningTeam ?? new Team() { },
                     MatchResults = m.MatchResults
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
-            return matches.Where(m => m.RefHomeTeam == RefTeam || m.RefGuestTeam == RefTeam).ToList();
+            return matches.Where(m => m.RefHomeTeam == RefTeam || m.RefGuestTeam == RefTeam).ToList() ?? [];
         }
 
-        public async Task<Match> GetMatch(int RefMatch)
+        public async Task<Match> GetMatch(int? RefMatch)
         {
             var match = await _context.Matches.AsNoTracking()
                 .Select(m => new Match()
@@ -113,6 +113,7 @@ namespace ScoreCraftApi.Enities
                     RefGuestTeam = m.RefGuestTeam,
                     MatchDate = m.MatchDate,
                     RefMatchWinner = m.RefMatchWinner,
+                    IsArchived = m.IsArchived,
                     Format = m.Format,
                     BestOf = m.BestOf,
                     HomeTeam = m.HomeTeam ?? new Team() { },
@@ -120,7 +121,7 @@ namespace ScoreCraftApi.Enities
                     WinningTeam = m.WinningTeam ?? new Team() { },
                     MatchResults = m.MatchResults
                 })
-                .FirstOrDefaultAsync( m => m.RefMatch == RefMatch);
+                .FirstOrDefaultAsync( m => m.RefMatch == RefMatch && m.IsArchived == false);
 
             if (match is null) return null;
 
@@ -157,12 +158,13 @@ namespace ScoreCraftApi.Enities
 
         public async Task<bool?> DeleteMatch(int RefMatch)
         {
+            // Archive the match instead of deleting it, so that historical data is preserved
             var dbMatch = await _context.Matches.FindAsync(RefMatch);
 
             if (dbMatch is null)
                 return null;
 
-            _context.Matches.Remove(dbMatch);
+            dbMatch.IsArchived = true;
             await _context.SaveChangesAsync();
 
             return true;

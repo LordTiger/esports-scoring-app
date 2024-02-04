@@ -7,6 +7,7 @@ export interface ITeamModel {
     teamName?: string;
     teamSize?: number;
     winningRatio?: number;
+    isArchived?: boolean;
     members?: Array<IUserModel>;
     matches?: Array<IMatchModel>;
     userTeams?: Array<IUserTeamModel>;

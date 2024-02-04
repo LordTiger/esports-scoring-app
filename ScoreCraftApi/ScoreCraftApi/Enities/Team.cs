@@ -11,6 +11,7 @@ namespace ScoreCraftApi.Enities
         [Key]
         public int? RefTeam { get; set; }
         public string? TeamName { get; set; }
+        public bool IsArchived { get; set; }
 
         [NotMapped]
         public virtual int? TeamSize { get; set; }
@@ -32,7 +33,6 @@ namespace ScoreCraftApi.Enities
 
         public async Task<List<Team>> GetTeamsCollection()
         {
-
             var teams = await _context.Teams.AsNoTracking()
             .Include(m => m.Matches)  // Include the Matches navigation property
             .Select(t => new Team()
@@ -40,11 +40,41 @@ namespace ScoreCraftApi.Enities
                 RefTeam = t.RefTeam,
                 TeamName = t.TeamName,
                 TeamSize = t.UserTeams!.Count,
-                Matches = new MatchesBLL(_context).GetTeamMatchCollection(t.RefTeam).Result
-            })
-            .ToListAsync();
+                IsArchived = t.IsArchived,
+                Matches = _context.Matches.AsNoTracking()
+                .Select(m => new Match()
+                {
+                    RefMatch = m.RefMatch,
+                    RefHomeTeam = m.RefHomeTeam,
+                    RefGuestTeam = m.RefGuestTeam,
+                    MatchDate = m.MatchDate,
+                    RefMatchWinner = m.RefMatchWinner,
+                    Format = m.Format,
+                    BestOf = m.BestOf,
+                    HomeTeam = m.HomeTeam ?? new Team() { },
+                    GuestTeam = m.GuestTeam ?? new Team() { },
+                    WinningTeam = m.WinningTeam ?? new Team() { },
+                    MatchResults = m.MatchResults
+                }).Where(m => m.RefHomeTeam == t.RefTeam || m.RefGuestTeam == t.RefTeam).ToList()
+            }).Where(t => t.IsArchived == false).ToListAsync();
 
             return teams;
+        }
+
+        public async Task<List<Team>> GetTeamsForLookup()
+        {
+
+            var teams = await _context.Teams.AsNoTracking()
+            .Include(m => m.Matches)  // Include the Matches navigation property
+            .Select(t => new Team()
+            {
+                RefTeam = t.RefTeam,
+                TeamName = t.TeamName,
+                IsArchived = t.IsArchived,
+                TeamSize = t.UserTeams!.Count,
+            }).ToListAsync();
+
+            return teams.ToList();
         }
 
         public async Task<List<Team>> GetUserTeams(Guid RefUser)
@@ -101,7 +131,7 @@ namespace ScoreCraftApi.Enities
             }
 
             // Remove RefTeams not present in the new list
-            var teamsToRemove = user.UserTeams.Where(ut => !model.RefTeams.Contains(ut.RefTeam)).ToList();
+            var teamsToRemove = user.UserTeams.Where(ut => !model.RefTeams.Contains((int)ut.RefTeam)).ToList();
             foreach (var teamToRemove in teamsToRemove)
             {
                 _context.UserTeams.Remove(teamToRemove);
@@ -125,7 +155,15 @@ namespace ScoreCraftApi.Enities
 
         public async Task<bool?> DeleteTeam(int? RefTeam)
         {
-            await _context.Teams.Where(t => t.RefTeam == RefTeam).ExecuteDeleteAsync();
+            // Archive the team instead of deleting it, so that historical data is preserved
+            var dbTeam = await _context.Teams.FindAsync(RefTeam);
+
+            if (dbTeam is null)
+                return null;
+
+            dbTeam.IsArchived = true;
+
+            await _context.SaveChangesAsync();
 
             return true;
         }

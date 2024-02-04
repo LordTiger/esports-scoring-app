@@ -21,7 +21,7 @@
 
     <ng-container matColumnDef="ratio">
         <th mat-header-cell *matHeaderCellDef> Win Rate Ratio </th>
-        <td mat-cell *matCellDef="let item"> {{item.winningRatio}}% </td>
+        <td mat-cell *matCellDef="let item"> {{item.winningRatio | number: '1.2-2' }}% </td>
     </ng-container>
     
    

@@ -24,7 +24,7 @@
         <mat-label>Team</mat-label>
         <mat-select placeholder="Team CBOS"  formControlName="refTeams" name="refTeams" multiple>
           @for (team of teams; track team.refTeam) {
-            <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
+            <mat-option [value]="team.refTeam" [disabled]="team.isArchived">{{team.teamName}}</mat-option>
           }
         </mat-select>
     </mat-form-field>

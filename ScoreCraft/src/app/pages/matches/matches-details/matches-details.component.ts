@@ -59,6 +59,12 @@ export class MatchesDetailsComponent implements OnInit {
 
       if (result) {
        this.model = result;
+
+       if(this.model.bestOf === this.model.matchResults!.length && !this.model.refMatchWinner) {
+          this.model.refMatchWinner = this.model.homeTotalWon! > this.model.guestTotalWon! ? this.model.refHomeTeam : this.model.refGuestTeam;
+          
+          this.setWinningTeam();
+       }
       }
       
     } catch (error) {
@@ -94,13 +100,6 @@ export class MatchesDetailsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.fetchData();
-
-        if(this.model.bestOf == this.model.matchResults?.length) { // Check if the match is over, set winning team based on match results
-          if(this.model.homeTotalWon! > this.model.guestTotalWon!) this.model.refMatchWinner = this.model.refHomeTeam; else this.model.refMatchWinner = this.model.refGuestTeam;
-          
-          this.setWinningTeam();
-          
-        }
       }
     });
   }

@@ -22,6 +22,12 @@ namespace ScoreCraftApi.Controllers
             return Ok( await new TeamBLL(_context).GetTeamsCollection());
         }
 
+        [HttpGet("getTeamsForLookup")]
+        public async Task<ActionResult<List<Team>>> GetTeamsForLookup()
+        {
+            return Ok(await new TeamBLL(_context).GetTeamsForLookup());
+        }
+
         [HttpGet("GetTeam")]
         public async Task<ActionResult<Team>> GetTeam(int RefTeam)
         {

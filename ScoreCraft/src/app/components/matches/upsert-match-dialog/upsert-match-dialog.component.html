@@ -17,7 +17,7 @@
       <mat-label>Home Team</mat-label>
       <mat-select placeholder="Select team"  formControlName="refHomeTeam" name="refHomeTeam" (selectionChange)="filterTeams()">
         @for (team of teamsList; track team.refTeam) {
-          <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
+          <mat-option [value]="team.refTeam" [disabled]="team.isArchived">{{team.teamName}}</mat-option>
         }
       </mat-select>
       <mat-error>This field is required </mat-error>
@@ -29,7 +29,7 @@
       <mat-label>Guest Team</mat-label>
       <mat-select placeholder="Select the opposite team"  formControlName="refGuestTeam" name="refGuestTeam" (selectionChange)="setFormatOptions()">
         @for (team of oppositeTeamList(); track team.refTeam) {
-          <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
+          <mat-option [value]="team.refTeam" [disabled]="team.isArchived">{{team.teamName}}</mat-option>
         }
       </mat-select>
       <mat-error>This field is required </mat-error>

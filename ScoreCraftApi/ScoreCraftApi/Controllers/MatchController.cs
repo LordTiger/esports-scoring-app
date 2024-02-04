@@ -17,33 +17,33 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpGet("GetCollection")]
-        public ActionResult<List<Match>> GetMatchCollection()
+        public async Task<ActionResult<List<Match>>> GetMatchCollection()
         {
-            return Ok(new MatchesBLL(_context).GetMatchesCollection().Result);
+            return Ok(await new MatchesBLL(_context).GetMatchesCollection());
         }
 
         [HttpGet("GetMatch")]
-        public ActionResult<Match> GetMatch(int RefMatch)
+        public async Task<ActionResult<Match>> GetMatch(int RefMatch)
         {
-            var match =  new MatchesBLL(_context).GetMatch(RefMatch).Result;
+            var match =  await new MatchesBLL(_context).GetMatch(RefMatch);
 
             if (match is null) return NotFound("Match not found");
             return Ok(match);
         }
 
         [HttpGet("GetMatchResult")]
-        public ActionResult<MatchResult> GetMatchResult(int RefMatch)
+        public async Task<ActionResult<MatchResult>> GetMatchResult(int RefMatch)
         {
-            var match = new MatchResultsBLL(_context).GetMatchResult(RefMatch).Result;
+            var match = await new MatchResultsBLL(_context).GetMatchResult(RefMatch);
 
             if (match is null) return NotFound("Match Result not found");
             return Ok(match);
         }
 
         [HttpPost("Insert")]
-        public ActionResult<Match> Insert(Match model)
+        public async Task<ActionResult<Match>> Insert(Match model)
         {
-            var newMatch = new MatchesBLL(_context).InsertMatch(model).Result;
+            var newMatch = await new MatchesBLL(_context).InsertMatch(model);
 
             if (newMatch is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -51,9 +51,9 @@ namespace ScoreCraftApi.Controllers
         }
 
         [HttpPost("AddMatchResult")]
-        public ActionResult<MatchResult> AddMatchResult(MatchResult model)
+        public async Task<ActionResult<MatchResult>> AddMatchResult(MatchResult model)
         {
-            var newMatchResult = new MatchResultsBLL(_context).InsertMatchResult(model).Result;
+            var newMatchResult = await new MatchResultsBLL(_context).InsertMatchResult(model);
 
             if (newMatchResult is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -62,9 +62,9 @@ namespace ScoreCraftApi.Controllers
 
 
         [HttpPut("Update")]
-        public ActionResult<Match> Update(Match model)
+        public async Task<ActionResult<Match>> Update(Match model)
         {
-            var newMatch = new MatchesBLL(_context).UpdateMatch(model).Result;
+            var newMatch = await new MatchesBLL(_context).UpdateMatch(model);
 
             if (newMatch is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 
@@ -73,9 +73,9 @@ namespace ScoreCraftApi.Controllers
 
 
         [HttpDelete("Delete")]
-        public ActionResult<bool> Delete(int RefMatch)
+        public async Task<ActionResult<bool>> Delete(int RefMatch)
         {
-            var isMatchDeleted = new MatchesBLL(_context).DeleteMatch(RefMatch).Result;
+            var isMatchDeleted = await new MatchesBLL(_context).DeleteMatch(RefMatch);
 
             if (isMatchDeleted is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
 

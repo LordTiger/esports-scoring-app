@@ -45,12 +45,12 @@ namespace ScoreCraftApi.Enities
                  Email = u.Email,
                  IsTeamCaptain = u.IsTeamCaptain,
                  TeamNames = string.Join(", ", u.UserTeams!.Select(ut => ut.Team!.TeamName ?? "No Teams Assigned")),
-                 RefTeams = u.UserTeams!.Select(ut => ut.RefTeam).ToList()
+                 RefTeams = u.UserTeams!.Select(ut => (int)ut.RefTeam).ToList()
              })
              .ToListAsync(); 
         }
 
-        public async Task<User> GetUser(Guid RefUser) 
+        public async Task<User> GetUser(Guid? RefUser) 
         {
             var user = await _context.Users
              .Select(u => new User()
@@ -61,7 +61,7 @@ namespace ScoreCraftApi.Enities
                  Email = u.Email,
                  IsTeamCaptain = u.IsTeamCaptain,
                  TeamNames = string.Join(", ", u.UserTeams!.Select(ut => ut.Team!.TeamName ?? "No Teams Assigned")),
-                 RefTeams = u.UserTeams!.Select(ut => ut.RefTeam).ToList()
+                 RefTeams = u.UserTeams!.Select(ut => (int)ut.RefTeam).ToList()
              }).FirstOrDefaultAsync(u => u.RefUser == RefUser);
 
             if (user is null) return null;

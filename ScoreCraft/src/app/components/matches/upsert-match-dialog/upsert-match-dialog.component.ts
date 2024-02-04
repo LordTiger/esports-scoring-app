@@ -129,23 +129,23 @@ export class UpsertMatchDialogComponent implements OnInit {
 
     this.formatOptions = [];
 
-    if(homeTeamSize === 1 && guestTeamSize === 1) {
+    if(homeTeamSize! > 0 && guestTeamSize! > 0) {
       this.formatOptions.push('1v1');
     }
 
-    if(homeTeamSize === 2 && guestTeamSize === 2) {
+    if(homeTeamSize! > 1 && guestTeamSize! > 1) {
       this.formatOptions.push('2v2');
     }
 
-    if(homeTeamSize === 3 && guestTeamSize === 3) {
+    if(homeTeamSize! > 2 && guestTeamSize! > 2) {
       this.formatOptions.push('3v3');
     }
 
-    if(homeTeamSize === 4 && guestTeamSize === 4) {
+    if(homeTeamSize! > 3 && guestTeamSize! > 3) {
       this.formatOptions.push('4v4');
     }
 
-    if(homeTeamSize === 5 && guestTeamSize === 5) {
+    if(homeTeamSize! > 4 && guestTeamSize! > 4) {
       this.formatOptions.push('5v5');
     }
     
@@ -157,7 +157,7 @@ export class UpsertMatchDialogComponent implements OnInit {
    */
   private async getTeams() { 
     try {
-      this.teamsList =  await this.teamsService.getCollection();
+      this.teamsList =  await this.teamsService.getTeamsForLookup();
 
       if(this.isEdit) {
         this.filterTeams();

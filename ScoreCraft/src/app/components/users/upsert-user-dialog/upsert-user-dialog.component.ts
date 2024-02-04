@@ -123,7 +123,7 @@ export class UpsertUserDialogComponent implements OnInit {
    */
   async getTeams() {
     try {
-      this.teams = await this.teamsService.getCollection();
+      this.teams = await this.teamsService.getTeamsForLookup();
 
       if(this.teams.length === 0) this.dialogForm.controls['team'].disable();
     } catch (error) {

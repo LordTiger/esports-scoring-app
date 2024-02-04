@@ -24,19 +24,22 @@ namespace ScoreCraftApi.Migrations
 
             modelBuilder.Entity("ScoreCraftApi.Enities.Match", b =>
                 {
-                    b.Property<int>("RefMatch")
+                    b.Property<int?>("RefMatch")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RefMatch"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RefMatch"));
 
-                    b.Property<int>("BestOf")
+                    b.Property<int?>("BestOf")
                         .HasColumnType("int");
 
                     b.Property<string>("Format")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("MatchDate")
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("MatchDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("RefGuestTeam")
@@ -96,12 +99,29 @@ namespace ScoreCraftApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RefTeam"));
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<string>("TeamName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RefTeam");
 
                     b.ToTable("Teams");
+
+                    b.HasData(
+                        new
+                        {
+                            RefTeam = 1,
+                            IsArchived = false,
+                            TeamName = "Team A"
+                        },
+                        new
+                        {
+                            RefTeam = 2,
+                            IsArchived = false,
+                            TeamName = "Team B"
+                        });
                 });
 
             modelBuilder.Entity("ScoreCraftApi.Enities.User", b =>
@@ -129,10 +149,10 @@ namespace ScoreCraftApi.Migrations
 
             modelBuilder.Entity("ScoreCraftApi.Enities.UserTeam", b =>
                 {
-                    b.Property<Guid>("RefUser")
+                    b.Property<Guid?>("RefUser")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RefTeam")
+                    b.Property<int?>("RefTeam")
                         .HasColumnType("int");
 
                     b.HasKey("RefUser", "RefTeam");
@@ -146,18 +166,15 @@ namespace ScoreCraftApi.Migrations
                 {
                     b.HasOne("ScoreCraftApi.Enities.Team", "GuestTeam")
                         .WithMany()
-                        .HasForeignKey("RefGuestTeam")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RefGuestTeam");
 
                     b.HasOne("ScoreCraftApi.Enities.Team", "HomeTeam")
                         .WithMany()
-                        .HasForeignKey("RefHomeTeam")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RefHomeTeam");
 
                     b.HasOne("ScoreCraftApi.Enities.Team", "WinningTeam")
                         .WithMany()
-                        .HasForeignKey("RefMatchWinner")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("RefMatchWinner");
 
                     b.HasOne("ScoreCraftApi.Enities.Team", null)
                         .WithMany("Matches")
@@ -184,13 +201,13 @@ namespace ScoreCraftApi.Migrations
                     b.HasOne("ScoreCraftApi.Enities.Team", "Team")
                         .WithMany("UserTeams")
                         .HasForeignKey("RefTeam")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("ScoreCraftApi.Enities.User", "User")
                         .WithMany("UserTeams")
                         .HasForeignKey("RefUser")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Team");
