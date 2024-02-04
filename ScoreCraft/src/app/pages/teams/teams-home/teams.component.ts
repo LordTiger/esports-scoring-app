@@ -13,6 +13,7 @@ import { UpsertTeamDialogComponent } from '../../../components/teams/upsert-team
 import { teamDialogType } from '../../../types/dialogTypes';
 import { IMatchModel } from '../../../interfaces/i-match-model';
 import { DecimalPipe } from '@angular/common';
+import { TeamDetailsComponent } from '../team-details/team-details.component';
 @Component({
   selector: 'app-teams',
   standalone: true,
@@ -72,9 +73,27 @@ export class TeamsComponent implements OnInit {
     if(teamMatches.length === 0) {
       return 0;
     }
-
     const wins = teamMatches.filter(match => match.refMatchWinner === refTeam).length;
-    return (wins / teamMatches.length) * 100;
+    return (wins / teamMatches.filter(match => match.matchResults?.length! > 0).length) * 100;
+  }
+
+
+  onTeamDetailsClick(team: ITeamModel) { 
+    const dialogData: teamDialogType = { 
+      title: 'Team Details',
+      isEdit: false,
+      data: team
+    }
+
+    const dialogRef = this.dialog.open(TeamDetailsComponent, {
+      width: '37.5rem',
+      height: 'auto',
+      data: dialogData
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
   }
 
   /**

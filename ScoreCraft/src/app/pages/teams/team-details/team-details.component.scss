@@ -1,0 +1,32 @@
+.table-details {
+    position: sticky;
+    top: 0;
+    background: #333;
+    z-index: 2;
+    margin-left: -0.875rem;
+
+    tr {
+        td {
+            padding: 0.438rem 0.5rem;
+            max-width: 12.5rem;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-bottom: solid 0.063rem #eee;
+            border-top: solid 0.063rem #eee; // Add border-top property
+            border-left: solid 0.063rem #eee;
+            border-right: solid 0.063rem #eee;
+
+
+            &:nth-child(1) {
+                width: 15rem;
+                border-right: solid 0.063rem #eee;
+                border-bottom: solid 0.063rem #eee;
+                
+                background-color: rgba(0, 0, 0, 0.01);
+                padding-left: 1.563rem;
+            }
+        }
+    }
+}
