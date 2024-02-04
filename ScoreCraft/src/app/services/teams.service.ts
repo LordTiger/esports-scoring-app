@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { ITeamModel } from '../interfaces/i-team-model';
 import { lastValueFrom } from 'rxjs';
 import { IMatchResultModel } from '../interfaces/i-match-result-model';
-import { IUserTeamModel } from '../interfaces/iuser-team-model';
+import { IUserTeamModel } from '../interfaces/i-user-team-model';
 import { IUserModel } from '../interfaces/i-user-model';
 
 @Injectable({

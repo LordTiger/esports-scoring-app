@@ -13,19 +13,13 @@ namespace ScoreCraftApi.Enities
         public int? RefGuestTeam { get; set; }
         public DateTime MatchDate { get; set; }
         public int? RefMatchWinner { get; set; }
-        public string? Formate { get; set; } // 1v1, 2v2, etc.
-        public int BestOf { get; set; } // 3, 5, etc.
+        public string? Format { get; set; } // Corrected property name
+        public int BestOf { get; set; }
         public ICollection<MatchResult>? MatchResults { get; set; }
 
-
-        [ForeignKey("RefHomeTeam")]
-        public virtual Team? HomeTeam { get; set; }
-
-        [ForeignKey("RefGuestTeam")]
-        public virtual Team? GuestTeam { get; set; }
-
-        [ForeignKey("RefMatchWinner")]
-        public virtual Team? WinningTeam { get; set; }
+        public Team? HomeTeam { get; set; }
+        public Team? GuestTeam { get; set; }
+        public Team? WinningTeam { get; set; }
     }
 
     public class MatchesBLL
@@ -72,7 +66,7 @@ namespace ScoreCraftApi.Enities
             dbMatch.RefGuestTeam = model.RefGuestTeam;
             dbMatch.MatchDate = model.MatchDate;
             dbMatch.RefMatchWinner = model.RefMatchWinner;
-            dbMatch.Formate = model.Formate;
+            dbMatch.Format = model.Format;
             dbMatch.BestOf = model.BestOf;
 
             await _context.SaveChangesAsync();

@@ -1,3 +1,21 @@
-<p>
-  upsert-team-dialog works!
-</p>
+<h2 mat-dialog-title [innerHTML]="dialogTitle"></h2>
+<mat-dialog-content>
+  <form [formGroup]="dialogForm">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Team Name</mat-label>
+        <input matInput type="text" placeholder="CBOS" formControlName="teamName" name="teamName">
+        <mat-error>This field is required </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button mat-dialog-close>
+      Cancel
+      <mat-icon>close</mat-icon>
+  </button>
+  <span class="spacer"></span>
+  <button mat-flat-button color="primary" type="button" (click)="onSubmit()" [disabled]="dialogForm.invalid">
+      Submit
+      <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>

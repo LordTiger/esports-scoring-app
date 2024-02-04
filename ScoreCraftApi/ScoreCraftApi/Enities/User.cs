@@ -16,8 +16,13 @@ namespace ScoreCraftApi.Enities
         public string? Surname { get; set; }
         public string? Email { get; set; }
 
+        [NotMapped] // Not mapped to the database
+        public virtual string? TeamNames { get; set; }
+
+        [NotMapped]
+        public virtual List<int>? RefTeams { get; set; }
+
         // Navigation Properties
-        public ICollection<Match>? Matches { get; set; }
         public ICollection<UserTeam>? UserTeams { get; set; }
     }
 
@@ -31,16 +36,36 @@ namespace ScoreCraftApi.Enities
 
        public async Task<List<User>> GetUserCollection() 
        {
-            return await _context.Users.AsNoTracking().ToListAsync();
-       }
+            return await _context.Users
+             .Select(u => new User() 
+             {
+                 RefUser = u.RefUser,
+                 Name = u.Name,
+                 Surname = u.Surname,
+                 Email = u.Email,
+                 IsTeamCaptain = u.IsTeamCaptain,
+                 TeamNames = string.Join(", ", u.UserTeams!.Select(ut => ut.Team!.TeamName ?? "No Teams Assigned")),
+                 RefTeams = u.UserTeams!.Select(ut => ut.RefTeam).ToList()
+             })
+             .ToListAsync(); 
+        }
 
         public async Task<User> GetUser(Guid RefUser) 
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(w => w.RefUser == RefUser);
+            var user = await _context.Users
+             .Select(u => new User()
+             {
+                 RefUser = u.RefUser,
+                 Name = u.Name,
+                 Surname = u.Surname,
+                 Email = u.Email,
+                 IsTeamCaptain = u.IsTeamCaptain,
+                 TeamNames = string.Join(", ", u.UserTeams!.Select(ut => ut.Team!.TeamName ?? "No Teams Assigned")),
+                 RefTeams = u.UserTeams!.Select(ut => ut.RefTeam).ToList()
+             }).FirstOrDefaultAsync(u => u.RefUser == RefUser);
 
-            if(user is null) return null;
+            if (user is null) return null;
           
-
             return user;
         }
 

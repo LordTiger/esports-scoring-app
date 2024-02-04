@@ -5,6 +5,8 @@ export interface IUserTeamModel {
     refUser?: string;
     refTeam?: number; 
 
+    refTeams?: Array<number>;
+
     user?: IUserModel;
-    team : ITeamModel;
+    team?: ITeamModel;
 }

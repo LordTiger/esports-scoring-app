@@ -5,3 +5,4 @@ ScoreCraftApi/ScoreCraftApi/bin/Debug/*
 ScoreCraftApi/ScoreCraftApi/bin/Release/*
 ScoreCraftApi/ScoreCraftApi/obj/*
 ScoreCraftApi/.vs/*
+ScoreCraftApi/ScoreCraftApi/Migrations/*

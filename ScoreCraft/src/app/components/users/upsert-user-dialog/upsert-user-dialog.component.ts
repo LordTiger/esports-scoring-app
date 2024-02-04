@@ -12,7 +12,7 @@ import { ITeamModel } from '../../../interfaces/i-team-model';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { IUserModel } from '../../../interfaces/i-user-model';
-import { IUserTeamModel } from '../../../interfaces/iuser-team-model';
+import { IUserTeamModel } from '../../../interfaces/i-user-team-model';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class UpsertUserDialogComponent implements OnInit {
     name: new FormControl(this.dialogData.data.name, [Validators.required]),
     surname: new FormControl(this.dialogData.data.surname, [Validators.required]),
     email: new FormControl(this.dialogData.data.email, [Validators.email, Validators.required]),
-    team: new FormControl(this.getTeamRefs(this.dialogData.data.userTeams ?? []), [Validators.required]),
+    refTeams: new FormControl(this.dialogData.data.refTeams),
     isTeamCaptain: new FormControl(this.dialogData.data.isTeamCaptain ?? false)
   });
 
@@ -67,7 +67,11 @@ export class UpsertUserDialogComponent implements OnInit {
     try {
       const model = this.getFormData();
       const result = (!this.isEdit)? await this.userService.createUser(model) : await this.userService.updateUser(model);
+
       if(result) {
+        const refTeams: Array<number> = this.dialogForm.controls['refTeams'].value ?? [];
+        if(refTeams.length > 0) await this.teamsService.addUserToTeam({refUser: result.refUser, refTeams: refTeams});
+        
         const toast = await this.toastController.create({
           message: 'User successfully ' + ((this.isEdit)? 'updated' : 'created'),
           duration: 2000,

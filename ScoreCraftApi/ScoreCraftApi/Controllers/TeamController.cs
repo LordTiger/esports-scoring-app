@@ -70,15 +70,5 @@ namespace ScoreCraftApi.Controllers
 
             return Ok(isTeamDeleted);
         }
-
-        [HttpDelete("RemoveUserFromTeam")]
-        public async Task<ActionResult<bool>> RemoveUserFromTeam(Guid RefUser, int RefTeam)
-        {
-            var isUserRemoved = await new TeamBLL(_context).RemoveUserFromTeam(RefUser, RefTeam);
-
-            if (isUserRemoved is null) return BadRequest("Oops, something went wrong. Please try again later or contact support.");
-
-            return Ok(isUserRemoved);
-        }
     }
 }

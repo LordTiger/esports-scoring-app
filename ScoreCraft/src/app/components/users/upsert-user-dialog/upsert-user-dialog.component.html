@@ -22,7 +22,7 @@
 
     <mat-form-field appearance="fill" class="full-width">
         <mat-label>Team</mat-label>
-        <mat-select placeholder="Team CBOS"  formControlName="team" name="team" multiple>
+        <mat-select placeholder="Team CBOS"  formControlName="refTeams" name="refTeams" multiple>
           @for (team of teams; track team.refTeam) {
             <mat-option [value]="team.refTeam">{{team.teamName}}</mat-option>
           }

@@ -1,6 +1,6 @@
 import { IMatchModel } from "./i-match-model";
 import { IUserModel } from "./i-user-model";
-import { IUserTeamModel } from "./iuser-team-model";
+import { IUserTeamModel } from "./i-user-team-model";
 
 export interface ITeamModel {
     refTeam?: number;

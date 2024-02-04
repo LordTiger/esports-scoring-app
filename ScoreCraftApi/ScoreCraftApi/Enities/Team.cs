@@ -10,11 +10,10 @@ namespace ScoreCraftApi.Enities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int? RefTeam { get; set; }
-        public required string TeamName { get; set; }
+        public string? TeamName { get; set; }
 
 
         // Navigation Properties
-        public ICollection<User>? Members { get; set; }
         public ICollection<Match>? Matches { get; set; }
         public ICollection<UserTeam>? UserTeams { get; set; }
     }
@@ -64,15 +63,18 @@ namespace ScoreCraftApi.Enities
 
         public async Task<User> AddUserToTeam(UserTeam model)
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.RefUser == model.RefUser);
-            //var team = await _context.Teams.AsNoTracking().FirstOrDefaultAsync(u => u.RefTeam == RefTeam);
+            var user = await _context.Users
+                .Include(u => u.UserTeams)
+                .FirstOrDefaultAsync(u => u.RefUser == model.RefUser);
 
             if (user is null)
                 return null;
 
-            if(model.RefTeams.Any())
+            // Add new RefTeams
+            foreach (var refTeam in model.RefTeams)
             {
-                model.RefTeams.ForEach(refTeam => {
+                if (!user.UserTeams.Any(ut => ut.RefTeam == refTeam))
+                {
                     var userTeam = new UserTeam
                     {
                         RefUser = model.RefUser,
@@ -80,12 +82,22 @@ namespace ScoreCraftApi.Enities
                     };
 
                     _context.UserTeams.Add(userTeam);
-                });
-
-                await _context.SaveChangesAsync();
+                }
             }
 
-            return await new UsersBLL(_context).GetUser(model.RefUser);
+            // Remove RefTeams not present in the new list
+            var teamsToRemove = user.UserTeams.Where(ut => !model.RefTeams.Contains(ut.RefTeam)).ToList();
+            foreach (var teamToRemove in teamsToRemove)
+            {
+                _context.UserTeams.Remove(teamToRemove);
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Refresh user entity to reflect changes
+            user = await new UsersBLL(_context).GetUser(model.RefUser);
+
+            return user;
         }
 
         public async Task<Team> UpdateTeam(Team model)
@@ -102,14 +114,6 @@ namespace ScoreCraftApi.Enities
 
             return true;
         }
-
-        public async Task<bool?> RemoveUserFromTeam(Guid RefUser, int RefTeam)
-        {
-            await _context.UserTeams.Where(u => u.RefUser == RefUser && u.RefTeam == RefTeam).ExecuteDeleteAsync();
-
-            return true;
-        }
-
 
     }
 }

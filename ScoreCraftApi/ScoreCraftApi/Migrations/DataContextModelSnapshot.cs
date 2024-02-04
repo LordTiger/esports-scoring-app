@@ -33,7 +33,7 @@ namespace ScoreCraftApi.Migrations
                     b.Property<int>("BestOf")
                         .HasColumnType("int");
 
-                    b.Property<string>("Formate")
+                    b.Property<string>("Format")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("MatchDate")
@@ -51,9 +51,6 @@ namespace ScoreCraftApi.Migrations
                     b.Property<int?>("TeamRefTeam")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("UserRefUser")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("RefMatch");
 
                     b.HasIndex("RefGuestTeam");
@@ -63,8 +60,6 @@ namespace ScoreCraftApi.Migrations
                     b.HasIndex("RefMatchWinner");
 
                     b.HasIndex("TeamRefTeam");
-
-                    b.HasIndex("UserRefUser");
 
                     b.ToTable("Matches");
                 });
@@ -102,7 +97,6 @@ namespace ScoreCraftApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RefTeam"));
 
                     b.Property<string>("TeamName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RefTeam");
@@ -128,12 +122,7 @@ namespace ScoreCraftApi.Migrations
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TeamRefTeam")
-                        .HasColumnType("int");
-
                     b.HasKey("RefUser");
-
-                    b.HasIndex("TeamRefTeam");
 
                     b.ToTable("Users");
                 });
@@ -174,10 +163,6 @@ namespace ScoreCraftApi.Migrations
                         .WithMany("Matches")
                         .HasForeignKey("TeamRefTeam");
 
-                    b.HasOne("ScoreCraftApi.Enities.User", null)
-                        .WithMany("Matches")
-                        .HasForeignKey("UserRefUser");
-
                     b.Navigation("GuestTeam");
 
                     b.Navigation("HomeTeam");
@@ -192,13 +177,6 @@ namespace ScoreCraftApi.Migrations
                         .HasForeignKey("RefMatch");
 
                     b.Navigation("Match");
-                });
-
-            modelBuilder.Entity("ScoreCraftApi.Enities.User", b =>
-                {
-                    b.HasOne("ScoreCraftApi.Enities.Team", null)
-                        .WithMany("Members")
-                        .HasForeignKey("TeamRefTeam");
                 });
 
             modelBuilder.Entity("ScoreCraftApi.Enities.UserTeam", b =>
@@ -229,15 +207,11 @@ namespace ScoreCraftApi.Migrations
                 {
                     b.Navigation("Matches");
 
-                    b.Navigation("Members");
-
                     b.Navigation("UserTeams");
                 });
 
             modelBuilder.Entity("ScoreCraftApi.Enities.User", b =>
                 {
-                    b.Navigation("Matches");
-
                     b.Navigation("UserTeams");
                 });
 #pragma warning restore 612, 618
