@@ -46,19 +46,18 @@ namespace ScoreCraftApi.Data
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<UserTeam>()
-                .HasKey(ut => new { ut.RefUser, ut.RefTeam });
+            .HasKey(ut => new { ut.RefUser, ut.RefTeam });
 
             modelBuilder.Entity<UserTeam>()
                 .HasOne(ut => ut.User)
                 .WithMany(u => u.UserTeams)
                 .HasForeignKey(ut => ut.RefUser)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserTeam>()
                 .HasOne(ut => ut.Team)
                 .WithMany(t => t.UserTeams)
-                .HasForeignKey(ut => ut.RefTeam)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .HasForeignKey(ut => ut.RefTeam);
 
             modelBuilder.Entity<Team>().HasData(
                 new Team { RefTeam = 1, TeamName = "Team A", IsArchived = false },
