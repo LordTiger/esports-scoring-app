@@ -70,7 +70,7 @@ export class UpsertUserDialogComponent implements OnInit {
 
       if(result) {
         const refTeams: Array<number> = this.dialogForm.controls['refTeams'].value ?? [];
-        if(refTeams.length > 0) await this.teamsService.addUserToTeam({refUser: result.refUser, refTeams: refTeams});
+        await this.teamsService.addUserToTeam({refUser: result.refUser, refTeams: refTeams});
         
         const toast = await this.toastController.create({
           message: 'User successfully ' + ((this.isEdit)? 'updated' : 'created'),
